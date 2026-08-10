@@ -1,0 +1,29 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" gradientUnits="userSpaceOnUse" x1="40" y1="55" x2="200" y2="185">
+      <stop offset="0%" stop-color="#ff0fafff"/>
+      <stop offset="100%" stop-color="#ff0fafff"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Code bracket left < -->
+  <path d="M92 66 L54 120 L92 174"
+        fill="none" stroke="url(#accentGrad)" stroke-width="12"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Code bracket right > -->
+  <path d="M148 66 L186 120 L148 174"
+        fill="none" stroke="url(#accentGrad)" stroke-width="12"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Letter S: satu garis tunggal, lahir dari ujung bracket kiri atas,
+       melengkung ke tengah, lalu menyatu ke ujung bracket kanan bawah -->
+  <path d="M92,66 C128,62 152,86 124,112 C96,138 92,150 100,158
+           C108,166 128,168 148,174"
+        fill="none" stroke="url(#accentGrad)" stroke-width="12"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
