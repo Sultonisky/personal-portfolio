@@ -145,6 +145,31 @@
       target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }
+
+  let dragStartX = 0;
+  let dragScrollLeft = 0;
+
+  function startProjectDrag(e: PointerEvent) {
+    const container = e.currentTarget as HTMLElement;
+    dragStartX = e.clientX;
+    dragScrollLeft = container.scrollLeft;
+    container.classList.add("is-dragging");
+    container.setPointerCapture(e.pointerId);
+  }
+
+  function moveProjectDrag(e: PointerEvent) {
+    const container = e.currentTarget as HTMLElement;
+    if (!container.classList.contains("is-dragging")) return;
+    container.scrollLeft = dragScrollLeft - (e.clientX - dragStartX);
+  }
+
+  function endProjectDrag(e: PointerEvent) {
+    const container = e.currentTarget as HTMLElement;
+    container.classList.remove("is-dragging");
+    if (container.hasPointerCapture(e.pointerId)) {
+      container.releasePointerCapture(e.pointerId);
+    }
+  }
 </script>
 
 <Navbar />
@@ -156,6 +181,12 @@
     class="min-h-[80vh] flex flex-col justify-center px-margin-mobile md:px-gutter max-w-container-max mx-auto w-full py-16 md:py-24 relative overflow-hidden"
     id="home"
   >
+    <div class="section-cable section-cable-right" aria-hidden="true">
+      <span class="section-cable-wire"></span>
+      <span class="section-cable-node section-cable-node-top"></span>
+      <span class="section-cable-node section-cable-node-bottom"></span>
+    </div>
+    <div class="section-cable-bridge" aria-hidden="true"></div>
     <!-- Floating Decorative Elements -->
     <div
       class="absolute top-20 right-[15%] opacity-[0.12] animate-float-slow pointer-events-none hidden lg:block"
@@ -243,7 +274,7 @@
         </a>
         <a
           class="flex items-center justify-center w-11 h-11 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/60 hover:border-primary/50 hover:bg-primary/10 hover:scale-110 transition-all duration-300"
-          href="https://www.linkedin.com/"
+          href="https://www.linkedin.com/in/mohammad-sultoni-a529b0371"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="LinkedIn"
@@ -284,6 +315,12 @@
     class="px-margin-mobile md:px-gutter max-w-container-max mx-auto w-full py-section-gap border-t border-[#333F43]/30 relative overflow-hidden"
     id="about"
   >
+    <div class="section-cable section-cable-left" aria-hidden="true">
+      <span class="section-cable-wire"></span>
+      <span class="section-cable-node section-cable-node-top"></span>
+      <span class="section-cable-node section-cable-node-bottom"></span>
+    </div>
+    <div class="section-cable-bridge" aria-hidden="true"></div>
     <!-- Background glow for glass effect -->
     <div
       class="absolute -left-20 -bottom-20 w-80 h-80 rounded-full blur-3xl opacity-40 pointer-events-none"
@@ -356,6 +393,12 @@
     class="px-margin-mobile md:px-gutter max-w-container-max mx-auto w-full py-section-gap border-t border-[#333F43]/30 relative overflow-hidden"
     id="stack"
   >
+    <div class="section-cable section-cable-right" aria-hidden="true">
+      <span class="section-cable-wire"></span>
+      <span class="section-cable-node section-cable-node-top"></span>
+      <span class="section-cable-node section-cable-node-bottom"></span>
+    </div>
+    <div class="section-cable-bridge" aria-hidden="true"></div>
     <!-- Background glow for glass effect -->
     <div
       class="absolute -left-20 -top-10 w-96 h-96 rounded-full blur-3xl opacity-50 pointer-events-none"
@@ -472,6 +515,12 @@
     class="px-margin-mobile md:px-gutter max-w-container-max mx-auto w-full py-section-gap border-t border-[#333F43]/30 relative overflow-hidden"
     id="projects"
   >
+    <div class="section-cable section-cable-left" aria-hidden="true">
+      <span class="section-cable-wire"></span>
+      <span class="section-cable-node section-cable-node-top"></span>
+      <span class="section-cable-node section-cable-node-bottom"></span>
+    </div>
+    <div class="section-cable-bridge" aria-hidden="true"></div>
     <!-- Background glow for glass effect -->
     <div
       class="absolute -left-20 top-1/3 w-80 h-80 rounded-full blur-3xl opacity-40 pointer-events-none"
@@ -542,7 +591,17 @@
           class="flex-1 h-px bg-gradient-to-r from-primary/40 to-transparent"
         ></div>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div
+          class="project-marquee"
+          role="region"
+          aria-label="Personal projects"
+          onpointerdown={startProjectDrag}
+          onpointermove={moveProjectDrag}
+          onpointerup={endProjectDrag}
+          onpointercancel={endProjectDrag}
+        >
+        <div class="project-track">
+          <div class="project-track-group">
         {#each personalProjects as item, i}
           <div
             class="project-card group relative overflow-hidden rounded-2xl border border-[#333F43]/60 bg-[#1D2427]/70 backdrop-blur-md transition-all duration-300 hover:border-primary/50 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/10"
@@ -638,6 +697,49 @@
             </div>
           </div>
         {/each}
+          </div>
+          <div class="project-track-group" aria-hidden="true">
+            {#each personalProjects as item, i}
+              {@const duplicateItem = item}
+              <div
+                class="project-card group relative overflow-hidden rounded-2xl border border-[#333F43]/60 bg-[#1D2427]/70 backdrop-blur-md transition-all duration-300 hover:border-primary/50 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/10"
+              >
+                <div class="project-card-grid"></div>
+                <div class="p-6 flex flex-col gap-6 relative z-10 min-h-full">
+                  <div class="project-card-meta">
+                    <span class="project-card-status"><span class="project-card-status-dot"></span> SYSTEM ONLINE</span>
+                    <span class="font-mono text-[10px] text-on-surface-variant/60">PRJ-{String(i + 1).padStart(2, "0")}</span>
+                  </div>
+                  <div class="flex justify-between items-start gap-4">
+                    <div class="relative">
+                      <div class="absolute inset-0 bg-primary/25 blur-xl rounded-full"></div>
+                      <div class="relative bg-[#13181A]/90 border border-[#333F43]/70 p-3 rounded-xl">
+                        {#if duplicateItem.img}
+                          <img alt={duplicateItem.name} class="w-9 h-auto object-contain" src={duplicateItem.img} />
+                        {:else}
+                          <span class="material-symbols-outlined text-primary text-2xl">schedule</span>
+                        {/if}
+                      </div>
+                    </div>
+                    <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href={duplicateItem.link} target="_blank" rel="noopener">View ↗</a>
+                  </div>
+                  <div class="flex flex-col gap-3">
+                    <div class="flex items-baseline gap-2">
+                      <span class="font-mono text-xs text-primary/70">{"0" + (i + 1)}/</span>
+                      <h3 class="font-body-lg text-body-lg text-on-background font-semibold">{duplicateItem.name}</h3>
+                    </div>
+                    <p class="text-on-surface-variant text-body-md leading-relaxed line-clamp-4">{duplicateItem.desc}</p>
+                  </div>
+                  <div class="flex flex-wrap gap-2 mt-auto pt-2">
+                    {#each duplicateItem.tags as tag}
+                      <span class="font-label-caps text-label-caps text-xs bg-primary/10 text-primary/90 px-2.5 py-1 rounded-md border border-primary/20">{tag}</span>
+                    {/each}
+                  </div>
+                </div>
+              </div>
+            {/each}
+          </div>
+        </div>
       </div>
 
       <!-- Client Projects -->
@@ -652,7 +754,17 @@
             class="flex-1 h-px bg-gradient-to-r from-primary/40 to-transparent"
           ></div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div
+          class="project-marquee"
+          role="region"
+          aria-label="Client projects"
+          onpointerdown={startProjectDrag}
+          onpointermove={moveProjectDrag}
+          onpointerup={endProjectDrag}
+          onpointercancel={endProjectDrag}
+        >
+          <div class="project-track project-track-reverse">
+            <div class="project-track-group">
           {#each clientProjects as item, i}
             <div
               class="project-card group relative overflow-hidden rounded-2xl border border-[#333F43]/60 bg-[#1D2427]/70 backdrop-blur-md transition-all duration-300 hover:border-primary/50 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/10"
@@ -748,6 +860,43 @@
               </div>
             </div>
           {/each}
+            </div>
+            <div class="project-track-group" aria-hidden="true">
+              {#each clientProjects as item, i}
+                <div
+                  class="project-card group relative overflow-hidden rounded-2xl border border-[#333F43]/60 bg-[#1D2427]/70 backdrop-blur-md transition-all duration-300 hover:border-primary/50 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/10"
+                >
+                  <div class="project-card-grid"></div>
+                  <div class="p-6 flex flex-col gap-6 relative z-10 min-h-full">
+                    <div class="project-card-meta">
+                      <span class="project-card-status"><span class="project-card-status-dot"></span> SYSTEM ONLINE</span>
+                      <span class="font-mono text-[10px] text-on-surface-variant/60">CLIENT-{String(i + 1).padStart(2, "0")}</span>
+                    </div>
+                    <div class="flex justify-between items-start gap-4">
+                      <div class="relative">
+                        <div class="absolute inset-0 bg-primary/25 blur-xl rounded-full"></div>
+                        <div class="relative bg-[#13181A]/90 border border-[#333F43]/70 p-3 rounded-xl">
+                          {#if item.img}
+                            <img alt={item.name} class="w-9 h-auto object-contain" src={item.img} />
+                          {:else}
+                            <span class="material-symbols-outlined text-primary text-2xl">apartment</span>
+                          {/if}
+                        </div>
+                      </div>
+                      <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href={item.link} target="_blank" rel="noopener">View ↗</a>
+                    </div>
+                    <div class="flex flex-col gap-3">
+                      <div class="flex items-baseline gap-2">
+                        <span class="font-mono text-xs text-primary/70">{"0" + (i + 1)}/</span>
+                        <h3 class="font-body-lg text-body-lg text-on-background font-semibold">{item.name}</h3>
+                      </div>
+                      <p class="text-on-surface-variant text-body-md leading-relaxed line-clamp-4">{item.desc}</p>
+                    </div>
+                  </div>
+                </div>
+              {/each}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -758,6 +907,11 @@
     class="px-margin-mobile md:px-gutter max-w-container-max mx-auto w-full py-section-gap border-t border-[#333F43]/30 relative overflow-hidden"
     id="contact"
   >
+    <div class="section-cable section-cable-right" aria-hidden="true">
+      <span class="section-cable-wire"></span>
+      <span class="section-cable-node section-cable-node-top"></span>
+      <span class="section-cable-node section-cable-node-bottom"></span>
+    </div>
     <!-- Background glow for glass effect -->
     <div
       class="absolute -right-20 -top-20 w-80 h-80 rounded-full blur-3xl opacity-40 pointer-events-none"
@@ -823,122 +977,85 @@
                 </p>
               </div>
 
-              <!-- Quick Links -->
-              <div class="flex flex-col gap-3">
-                <a
-                  class="group flex items-center gap-4 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/60 p-4 hover:border-primary/50 hover:bg-[#1D2427] transition-all duration-300"
-                  href="mailto:hello@sultoni.dev"
-                >
-                  <div
-                    class="flex items-center justify-center w-11 h-11 rounded-lg bg-primary/10 text-primary shrink-0"
-                  >
-                    <span class="material-symbols-outlined">mail</span>
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <p
-                      class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest text-xs mb-0.5"
-                    >
-                      Email
-                    </p>
-                    <p class="font-body-md text-on-background truncate">
-                      hello@sultoni.dev
-                    </p>
-                  </div>
-                  <span
-                    class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors"
-                    >arrow_forward</span
-                  >
-                </a>
-                <a
-                  class="group flex items-center gap-4 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/60 p-4 hover:border-primary/50 hover:bg-[#1D2427] transition-all duration-300"
-                  href="tel:+6281234567890"
-                >
-                  <div
-                    class="flex items-center justify-center w-11 h-11 rounded-lg bg-primary/10 text-primary shrink-0"
-                  >
-                    <span class="material-symbols-outlined">call</span>
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <p
-                      class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest text-xs mb-0.5"
-                    >
-                      Phone
-                    </p>
-                    <p class="font-body-md text-on-background truncate">
-                      +62 812-3456-7890
-                    </p>
-                  </div>
-                  <span
-                    class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors"
-                    >arrow_forward</span
-                  >
-                </a>
-              </div>
             </div>
 
-            <!-- Right: form -->
-            <form class="md:col-span-7 flex flex-col gap-5" id="contact-form">
-              <div class="flex flex-col gap-2">
-                <label
-                  class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest"
-                  for="name">Name</label
+            <!-- Right: direct links -->
+            <div class="md:col-span-7 flex flex-col gap-3">
+              <div class="mb-2">
+                <span class="font-mono text-xs text-primary/80"
+                  >&gt;_ Open channels</span
                 >
-                <div class="relative">
-                  <span
-                    class="absolute left-3.5 top-1/2 -translate-y-1/2 material-symbols-outlined text-[18px] text-on-surface-variant"
-                    >person</span
-                  >
-                  <input
-                    class="w-full bg-[#1D2427]/80 border border-[#333F43]/40 rounded-xl pl-11 pr-3 py-3 text-on-background placeholder:text-on-surface-variant/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/60 transition-all"
-                    id="name"
-                    placeholder="Your Name"
-                    type="text"
-                  />
-                </div>
+                <h3 class="font-body-lg text-body-lg text-on-background font-semibold mt-2">
+                  Find me across the network.
+                </h3>
               </div>
-              <div class="flex flex-col gap-2">
-                <label
-                  class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest"
-                  for="contact-info">Email or Phone Number</label
-                >
-                <div class="relative">
-                  <span
-                    class="absolute left-3.5 top-1/2 -translate-y-1/2 material-symbols-outlined text-[18px] text-on-surface-variant"
-                    >alternate_email</span
-                  >
-                  <input
-                    class="w-full bg-[#1D2427]/80 border border-[#333F43]/40 rounded-xl pl-11 pr-3 py-3 text-on-background placeholder:text-on-surface-variant/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/60 transition-all"
-                    id="contact-info"
-                    placeholder="hello@example.com"
-                    type="text"
-                  />
-                </div>
-              </div>
-              <div class="flex flex-col gap-2">
-                <label
-                  class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest"
-                  for="message">Message</label
-                >
-                <div class="relative">
-                  <span
-                    class="absolute left-3.5 top-4 material-symbols-outlined text-[18px] text-on-surface-variant"
-                    >chat</span
-                  >
-                  <textarea
-                    class="w-full bg-[#1D2427]/80 border border-[#333F43]/40 rounded-xl pl-11 pr-3 py-3 text-on-background placeholder:text-on-surface-variant/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/60 transition-all min-h-[120px]"
-                    id="message"
-                    placeholder="How can I help you?"
-                  ></textarea>
-                </div>
-              </div>
-              <button
-                class="mt-2 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-primary/20 border border-primary/40 text-primary font-label-caps text-label-caps font-semibold hover:bg-primary/35 hover:border-primary/70 hover:shadow-lg hover:shadow-primary/20 transition-all duration-300"
-                type="submit"
+              <a
+                class="group flex items-center gap-4 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/45 p-4 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
+                href="mailto:muhsultonipml11@gmail.com"
               >
-                <span class="material-symbols-outlined text-[18px]">send</span>
-                Send Message
-              </button>
-            </form>
+                <div class="flex items-center justify-center w-11 h-11 rounded-lg bg-primary/10 text-primary shrink-0">
+                  <span class="material-symbols-outlined">mail</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest text-xs mb-0.5">Email</p>
+                  <p class="font-body-md text-on-background truncate">muhsultonipml11@gmail.com</p>
+                </div>
+                <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">arrow_outward</span>
+              </a>
+              <a
+                class="group flex items-center gap-4 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/45 p-4 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
+                href="tel:+6289684267761"
+              >
+                <div class="flex items-center justify-center w-11 h-11 rounded-lg bg-primary/10 text-primary shrink-0">
+                  <span class="material-symbols-outlined">call</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest text-xs mb-0.5">Phone</p>
+                  <p class="font-body-md text-on-background truncate">+62 896-8426-7761</p>
+                </div>
+                <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">arrow_outward</span>
+              </a>
+              <a
+                class="group flex items-center gap-4 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/45 p-4 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
+                href="https://github.com/Sultonisky"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div
+                  class="flex items-center justify-center w-11 h-11 rounded-lg bg-primary/10 text-primary shrink-0"
+                >
+                  <img src="/images/stacks/github.svg" alt="" class="w-5 h-5" />
+                </div>
+                <div class="flex-1">
+                  <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest text-xs mb-0.5">
+                    GitHub
+                  </p>
+                  <p class="font-body-md text-on-background">Sultonisky</p>
+                </div>
+                <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">
+                  arrow_outward
+                </span>
+              </a>
+              <a
+                class="group flex items-center gap-4 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/45 p-4 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
+                href="https://www.linkedin.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div class="flex items-center justify-center w-11 h-11 rounded-lg bg-primary/10 text-primary shrink-0">
+                  <img src="/images/stacks/linkedin.svg" alt="" class="w-5 h-5" />
+                </div>
+                <div class="flex-1">
+                  <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest text-xs mb-0.5">
+                    LinkedIn
+                  </p>
+                  <p class="font-body-md text-on-background">Connect professionally</p>
+                </div>
+                <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">
+                  arrow_outward
+                </span>
+              </a>
+            </div>
           </div>
         </div>
       </div>

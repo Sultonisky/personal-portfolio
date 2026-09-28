@@ -41,4 +41,16 @@
 	<span class="falling-letter">a</span>
 </div>
 
+<!-- Secondary falling letters layer -->
+<div class="falling-letters falling-letters-secondary" aria-hidden="true">
+	<span class="falling-letter">t</span>
+	<span class="falling-letter">o</span>
+	<span class="falling-letter">n</span>
+	<span class="falling-letter">i</span>
+	<span class="falling-letter">t</span>
+	<span class="falling-letter">o</span>
+	<span class="falling-letter">n</span>
+	<span class="falling-letter">i</span>
+</div>
+
 {@render children()}

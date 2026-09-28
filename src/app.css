@@ -252,6 +252,47 @@ html {
 .falling-letter:nth-child(11) { --falling-left: 69%; --falling-duration: 12s; --falling-delay: -9s; }
 .falling-letter:nth-child(12) { --falling-left: 96%; --falling-duration: 16s; --falling-delay: -3s; color: rgba(255, 226, 0, 0.45); }
 
+.falling-letters-secondary {
+	z-index: 2;
+}
+
+.falling-letters-secondary .falling-letter {
+	color: rgba(255, 226, 0, 0.42);
+	font-size: clamp(0.65rem, 1.1vw, 0.9rem);
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	text-shadow: 0 0 8px rgba(255, 226, 0, 0.35);
+	animation-name: falling-letter-secondary;
+}
+
+.falling-letters-secondary .falling-letter::after {
+	height: 34px;
+	background: linear-gradient(to bottom, rgba(255, 226, 0, 0.24), transparent);
+}
+
+.falling-letters-secondary .falling-letter:nth-child(1) { --falling-left: 13%; --falling-duration: 15s; --falling-delay: -4s; }
+.falling-letters-secondary .falling-letter:nth-child(2) { --falling-left: 24%; --falling-duration: 18s; --falling-delay: -11s; }
+.falling-letters-secondary .falling-letter:nth-child(3) { --falling-left: 37%; --falling-duration: 16s; --falling-delay: -7s; }
+.falling-letters-secondary .falling-letter:nth-child(4) { --falling-left: 49%; --falling-duration: 19s; --falling-delay: -14s; }
+.falling-letters-secondary .falling-letter:nth-child(5) { --falling-left: 59%; --falling-duration: 17s; --falling-delay: -2s; }
+.falling-letters-secondary .falling-letter:nth-child(6) { --falling-left: 78%; --falling-duration: 20s; --falling-delay: -9s; }
+.falling-letters-secondary .falling-letter:nth-child(7) { --falling-left: 87%; --falling-duration: 15s; --falling-delay: -13s; }
+.falling-letters-secondary .falling-letter:nth-child(8) { --falling-left: 98%; --falling-duration: 18s; --falling-delay: -6s; }
+
+@keyframes falling-letter-secondary {
+	0% {
+		opacity: 0;
+		transform: translate3d(10vw, 0, 0) rotate(18deg);
+	}
+	12%, 80% {
+		opacity: 0.5;
+	}
+	100% {
+		opacity: 0;
+		transform: translate3d(-14vw, 125vh, 0) rotate(-28deg);
+	}
+}
+
 @keyframes falling-letter {
 	0% {
 		opacity: 0;
@@ -294,6 +335,173 @@ html {
 	z-index: 100;
 }
 
+/* Neon circuit cables connecting the sections */
+.section-cable {
+	position: absolute;
+	top: 1.5rem;
+	bottom: 1.5rem;
+	width: 4rem;
+	pointer-events: none;
+	opacity: 0.7;
+	z-index: 1;
+}
+
+.section-cable-right {
+	right: clamp(1rem, 5vw, 4rem);
+}
+
+.section-cable-left {
+	left: clamp(1rem, 5vw, 4rem);
+}
+
+.section-cable-wire {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 50%;
+	width: 1.5rem;
+	border-right: 1px solid rgba(255, 15, 175, 0.3);
+	border-radius: 0 1.5rem 1.5rem 0;
+	box-shadow: 4px 0 10px rgba(255, 15, 175, 0.12);
+}
+
+.section-cable-left .section-cable-wire {
+	left: auto;
+	right: 50%;
+	border-right: 0;
+	border-left: 1px solid rgba(255, 15, 175, 0.3);
+	border-radius: 1.5rem 0 0 1.5rem;
+	box-shadow: -4px 0 10px rgba(255, 15, 175, 0.12);
+}
+
+.section-cable-wire::before,
+.section-cable-wire::after {
+	content: "";
+	position: absolute;
+	width: 0.65rem;
+	height: 0.65rem;
+	border: 1px solid rgba(255, 15, 175, 0.45);
+	border-radius: 999px;
+	background: rgba(19, 24, 26, 0.85);
+	box-shadow: 0 0 8px rgba(255, 15, 175, 0.45);
+}
+
+.section-cable-wire::before {
+	top: 22%;
+	right: -0.35rem;
+}
+
+.section-cable-wire::after {
+	bottom: 24%;
+	right: -0.35rem;
+}
+
+.section-cable-left .section-cable-wire::before,
+.section-cable-left .section-cable-wire::after {
+	right: auto;
+	left: -0.35rem;
+}
+
+.section-cable-node {
+	position: absolute;
+	left: calc(50% + 0.8rem);
+	width: 0.5rem;
+	height: 0.5rem;
+	border-radius: 999px;
+	background: #ff0faf;
+	box-shadow: 0 0 0 4px rgba(255, 15, 175, 0.08), 0 0 12px rgba(255, 15, 175, 0.8);
+	animation: cable-node-pulse 3s ease-in-out infinite;
+}
+
+.section-cable-node-top {
+	top: 0.5rem;
+}
+
+.section-cable-node-bottom {
+	bottom: 0.5rem;
+	animation-delay: 1.5s;
+}
+
+.section-cable-left .section-cable-node {
+	left: auto;
+	right: calc(50% + 0.8rem);
+}
+
+.section-cable-bridge {
+	position: absolute;
+	left: calc(clamp(1rem, 5vw, 4rem) + 2rem);
+	right: calc(clamp(1rem, 5vw, 4rem) + 2rem);
+	bottom: 2rem;
+	height: 1.5rem;
+	border-bottom: 1px solid rgba(255, 15, 175, 0.3);
+	border-radius: 0 0 3rem 3rem;
+	box-shadow: 0 5px 10px rgba(255, 15, 175, 0.1);
+	pointer-events: none;
+	opacity: 0.7;
+}
+
+.section-cable-bridge::before,
+.section-cable-bridge::after {
+	content: "";
+	position: absolute;
+	bottom: -0.25rem;
+	width: 0.5rem;
+	height: 0.5rem;
+	border: 1px solid rgba(255, 15, 175, 0.5);
+	border-radius: 999px;
+	background: #13181a;
+	box-shadow: 0 0 8px rgba(255, 15, 175, 0.55);
+}
+
+.section-cable-bridge::before {
+	left: -0.25rem;
+}
+
+.section-cable-bridge::after {
+	right: -0.25rem;
+}
+
+.section-cable-bridge {
+	background:
+		linear-gradient(90deg, transparent 0%, rgba(255, 15, 175, 0.65) 50%, transparent 100%)
+		0 100% / 9rem 1px no-repeat;
+	animation: cable-bridge-flow 5s linear infinite;
+}
+
+@keyframes cable-bridge-flow {
+	0% {
+		background-position: -9rem 100%;
+	}
+	100% {
+		background-position: calc(100% + 9rem) 100%;
+	}
+}
+
+@keyframes cable-node-pulse {
+	0%, 100% {
+		opacity: 0.45;
+		transform: scale(0.8);
+	}
+	50% {
+		opacity: 1;
+		transform: scale(1.15);
+	}
+}
+
+@media (max-width: 768px) {
+	.section-cable,
+	.section-cable-bridge {
+		display: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.section-cable-node,
+	.section-cable-bridge {
+		animation: none;
+	}
+}
+
 /* Section Glow Pulse */
 @keyframes section-glow-pulse {
 	0%, 100% {
@@ -323,8 +531,127 @@ html {
 }
 
 /* Project cards: digital case-file treatment */
+.project-marquee {
+	position: relative;
+	overflow-x: auto;
+	overflow-y: hidden;
+	padding: 0.75rem 0.25rem 1.5rem;
+	cursor: grab;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+	touch-action: pan-y;
+	mask-image: linear-gradient(
+		to right,
+		transparent,
+		black 4%,
+		black 96%,
+		transparent
+	);
+}
+
+.project-marquee::-webkit-scrollbar {
+	display: none;
+}
+
+.project-marquee.is-dragging {
+	cursor: grabbing;
+	user-select: none;
+}
+
+.project-marquee.is-dragging .project-track {
+	animation-play-state: paused;
+}
+
+.project-track {
+	display: flex;
+	width: max-content;
+	animation: project-marquee 30s linear infinite;
+}
+
+.project-track-reverse {
+	animation-name: project-marquee-reverse;
+	animation-duration: 20s;
+}
+
+.project-track-group {
+	display: flex;
+	gap: 1.5rem;
+	padding-right: 1.5rem;
+}
+
+.project-marquee .project-card {
+	flex: 0 0 min(360px, calc(100vw - 2rem));
+	transform-origin: center center;
+	animation: project-card-flow 5.5s ease-in-out infinite;
+	will-change: transform, opacity;
+}
+
+.project-track-group .project-card:nth-child(2) {
+	animation-delay: 0.7s;
+}
+
+.project-track-group .project-card:nth-child(3) {
+	animation-delay: 1.4s;
+}
+
+.project-track-group .project-card:nth-child(4) {
+	animation-delay: 2.1s;
+}
+
+.project-track-group .project-card:nth-child(5) {
+	animation-delay: 2.8s;
+}
+
+.project-track-group .project-card:nth-child(6) {
+	animation-delay: 3.5s;
+}
+
+@keyframes project-card-flow {
+	0%, 100% {
+		opacity: 0.72;
+		transform: scale(0.9);
+	}
+	45%, 75% {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+.project-marquee:hover .project-track {
+	animation-play-state: paused;
+}
+
+@keyframes project-marquee {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+@keyframes project-marquee-reverse {
+	from {
+		transform: translateX(-50%);
+	}
+	to {
+		transform: translateX(0);
+	}
+}
+
 .project-card {
 	isolation: isolate;
+	background: linear-gradient(
+		135deg,
+		rgba(29, 36, 39, 0.42),
+		rgba(19, 24, 26, 0.28)
+	);
+	border-color: rgba(148, 163, 184, 0.2);
+	backdrop-filter: blur(20px) saturate(125%);
+	-webkit-backdrop-filter: blur(20px) saturate(125%);
+	box-shadow:
+		inset 0 1px 0 rgba(255, 255, 255, 0.08),
+		0 12px 35px rgba(0, 0, 0, 0.14);
 	animation: project-card-enter 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -426,7 +753,12 @@ html {
 
 @media (prefers-reduced-motion: reduce) {
 	.project-card,
+	.project-marquee .project-card,
 	.project-card-status-dot {
+		animation: none;
+	}
+
+	.project-track {
 		animation: none;
 	}
 }
