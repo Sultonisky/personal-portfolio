@@ -3,6 +3,10 @@
   import Footer from "$lib/components/Footer.svelte";
   import Typewriter from "$lib/components/Typewriter.svelte";
 
+  type GridItem =
+    | { type: "stack"; name: string; img: string; level: number }
+    | { type: "filler"; level: number };
+
   const typewriterTexts = [
     "I like creating web apps, figuring out how data moves around, designing APIs... I like understanding how things work internally, breaking things apart, and rebuilding them in a simpler way.",
     "My focus is on eliminating redundancy and ensuring that the underlying architecture is as clean and documented as the user-facing interfaces.",
@@ -51,10 +55,12 @@
   ];
 
   // Combine all items for contribution grid
-  const allStackItems = [...productionStack, ...exploringStack, ...tools];
+  const allStackItems: GridItem[] = [...productionStack, ...exploringStack, ...tools].map(
+    (item) => ({ ...item, type: "stack" as const }),
+  );
 
   // Fixed filler cells pattern - 9 cells to make 40 total (31 stack + 9 filler), alternating levels for visual consistency
-  const fillerCells = Array.from({ length: 9 }, (_, i) => ({
+  const fillerCells: GridItem[] = Array.from({ length: 9 }, (_, i) => ({
     type: "filler",
     level: i % 2, // deterministic: alternates 0,1,0,1...
   }));
@@ -230,14 +236,16 @@
         <a
           class="bg-[#1D2427] border border-primary/40 text-primary px-8 py-4 rounded-lg flex items-center gap-3 hover:bg-[#1D2427]/80 hover:border-primary hover:scale-105 transition-all duration-300 font-label-caps text-label-caps"
           href="#stack"
-          on:click={(e) => handleAnchorClick(e, "#stack")}
+          onclick={(e) => handleAnchorClick(e, "#stack")}
         >
           <span class="material-symbols-outlined text-[20px]">terminal</span>
           Explore Stack
         </a>
         <a
           class="flex items-center justify-center w-11 h-11 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/60 hover:border-primary/50 hover:bg-primary/10 hover:scale-110 transition-all duration-300"
-          href="#"
+          href="https://www.linkedin.com/"
+          target="_blank"
+          rel="noopener noreferrer"
           aria-label="LinkedIn"
         >
           <img
@@ -248,7 +256,9 @@
         </a>
         <a
           class="flex items-center justify-center w-11 h-11 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/60 hover:border-primary/50 hover:bg-primary/10 hover:scale-110 transition-all duration-300"
-          href="#"
+          href="https://github.com/Sultonisky"
+          target="_blank"
+          rel="noopener noreferrer"
           aria-label="GitHub"
         >
           <img
@@ -541,6 +551,7 @@
             <div
               class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-primary via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             ></div>
+            <div class="project-card-grid"></div>
 
             <!-- Watermark index -->
             <div
@@ -550,6 +561,15 @@
             </div>
 
             <div class="p-6 flex flex-col gap-6 relative z-10 min-h-full">
+              <div class="project-card-meta">
+                <span class="project-card-status">
+                  <span class="project-card-status-dot"></span>
+                  SYSTEM ONLINE
+                </span>
+                <span class="font-mono text-[10px] text-on-surface-variant/60"
+                  >PRJ-{String(i + 1).padStart(2, "0")}</span
+                >
+              </div>
               <div class="flex justify-between items-start gap-4">
                 <div class="relative">
                   <div
@@ -641,6 +661,7 @@
               <div
                 class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-primary via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               ></div>
+              <div class="project-card-grid"></div>
 
               <!-- Watermark index -->
               <div
@@ -650,6 +671,15 @@
               </div>
 
               <div class="p-6 flex flex-col gap-6 relative z-10 min-h-full">
+                <div class="project-card-meta">
+                  <span class="project-card-status">
+                    <span class="project-card-status-dot"></span>
+                    SYSTEM ONLINE
+                  </span>
+                  <span class="font-mono text-[10px] text-on-surface-variant/60"
+                    >CLIENT-{String(i + 1).padStart(2, "0")}</span
+                  >
+                </div>
                 <div class="flex justify-between items-start gap-4">
                   <div class="relative">
                     <div

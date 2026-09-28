@@ -25,4 +25,20 @@
 	<div class="floating-particle" style="width: 6px; height: 6px; top: 50%; left: 25%; animation-delay: 2.2s;"></div>
 </div>
 
+<!-- Subtle falling letter constellation -->
+<div class="falling-letters" aria-hidden="true">
+	<span class="falling-letter">s</span>
+	<span class="falling-letter">v</span>
+	<span class="falling-letter">i</span>
+	<span class="falling-letter">a</span>
+	<span class="falling-letter">s</span>
+	<span class="falling-letter">v</span>
+	<span class="falling-letter">i</span>
+	<span class="falling-letter">a</span>
+	<span class="falling-letter">s</span>
+	<span class="falling-letter">v</span>
+	<span class="falling-letter">i</span>
+	<span class="falling-letter">a</span>
+</div>
+
 {@render children()}

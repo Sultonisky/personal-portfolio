@@ -39,7 +39,7 @@
 
 <nav class="fixed top-0 w-full border-b border-transparent transition-all duration-300 z-50 {scrolled ? 'glass scrolled' : ''}">
 	<div class="flex justify-between items-center px-margin-mobile md:px-gutter py-5 max-w-container-max mx-auto w-full z-50">
-		<a class="flex items-center gap-3 font-headline-md text-headline-md font-bold text-on-background tracking-tight hover:scale-105 transition-transform" href="#home" on:click={(e) => handleAnchorClick(e, '#home')}>
+		<a class="flex items-center gap-3 font-headline-md text-headline-md font-bold text-on-background tracking-tight hover:scale-105 transition-transform" href="#home" onclick={(e) => handleAnchorClick(e, '#home')}>
 			<img src="/images/logo.svg" alt="SULTONI.DEV Logo" class="w-20 h-auto" />
 		</a>    
 		<div class="hidden md:flex items-center space-x-8">
@@ -48,7 +48,7 @@
 					class="nav-link text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 pb-1 font-label-caps text-[18px] leading-tight {activeSection === section ? 'active' : ''}"
 					data-section={section}
 					href={`#${section}`}
-					on:click={(e) => handleAnchorClick(e, `#${section}`)}
+					onclick={(e) => handleAnchorClick(e, `#${section}`)}
 				>
 					{section.charAt(0).toUpperCase() + section.slice(1)}
 				</a>
@@ -59,21 +59,23 @@
 				class="nav-link bg-primary/10 text-primary px-5 py-2.5 rounded-lg font-label-caps text-[18px] font-semibold hover:bg-primary/20 transition-all duration-300 text-center {activeSection === 'contact' ? 'active' : ''}"
 				data-section="contact"
 				href="#contact"
-				on:click={(e) => handleAnchorClick(e, '#contact')}
+				onclick={(e) => handleAnchorClick(e, '#contact')}
 			>
 				Contact
 			</a>
 		</div>
-		<button class="md:hidden text-on-background p-2 rounded-lg hover:bg-surface-container-low transition-colors" on:click={() => mobileMenuOpen = !mobileMenuOpen}>
+		<button type="button" aria-label="Toggle navigation menu" class="md:hidden text-on-background p-2 rounded-lg hover:bg-surface-container-low transition-colors" onclick={() => mobileMenuOpen = !mobileMenuOpen}>
 			<span class="material-symbols-outlined text-2xl">{mobileMenuOpen ? 'close' : 'menu'}</span>
 		</button>
 	</div>
 
 	<!-- Overlay -->
-	<div 
+	<button
+		type="button"
+		aria-label="Close navigation menu"
 		class="fixed inset-0 bg-black/50 transition-all duration-300 z-40 md:hidden {mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}"
-		on:click={() => mobileMenuOpen = false}
-	></div>
+		onclick={() => mobileMenuOpen = false}
+	></button>
 
 	<!-- Sidebar -->
 	<div 
@@ -81,7 +83,7 @@
 	>
 		<div class="flex items-center justify-between p-5 border-b border-outline-variant">
 			<h2 class="font-semibold text-lg">Menu</h2>
-			<button on:click={() => mobileMenuOpen = false} class="text-2xl">
+			<button type="button" aria-label="Close navigation menu" onclick={() => mobileMenuOpen = false} class="text-2xl">
 				✕
 			</button>
 		</div>
@@ -91,7 +93,7 @@
 				<a 
 					class="nav-link-mobile block py-2.5 text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 {activeSection === section ? 'active' : ''}"
 					href={`#${section}`}
-					on:click={(e) => handleAnchorClick(e, `#${section}`)}
+					onclick={(e) => handleAnchorClick(e, `#${section}`)}
 				>
 					{section.charAt(0).toUpperCase() + section.slice(1)}
 				</a>
@@ -100,7 +102,7 @@
 			<a 
 				class="mt-5 block w-full bg-primary text-[#13181A] px-5 py-3 rounded-lg font-semibold hover:bg-[#b8e600] transition-all duration-300 text-center"
 				href="#contact"
-				on:click={(e) => handleAnchorClick(e, '#contact')}
+				onclick={(e) => handleAnchorClick(e, '#contact')}
 			>
 				Contact
 			</a>
@@ -141,7 +143,7 @@
 		font-weight: 700 !important;
 	}
 
-	#navbar.scrolled {
+	nav.scrolled {
 		background-color: transparent !important;
 		backdrop-filter: blur(5px);
 		border-color: rgba(51, 63, 67, 0.5);
