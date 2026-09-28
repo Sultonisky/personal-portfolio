@@ -9,7 +9,18 @@
 </svelte:head>
 
 <!-- Page-wide Grid Lines Background -->
-<div class="page-grid-lines scanline-effect"></div>
+<div class="page-grid-lines scanline-effect" aria-hidden="true">
+	<span class="grid-line-glow"></span>
+	<span class="grid-line-glow"></span>
+	<span class="grid-line-glow"></span>
+	<span class="grid-line-glow"></span>
+	<span class="grid-line-glow"></span>
+	<span class="grid-line-glow"></span>
+	<span class="grid-line-glow"></span>
+	<span class="grid-line-glow"></span>
+	<span class="grid-line-glow"></span>
+	<span class="grid-line-glow"></span>
+</div>
 
 <!-- Floating Particles -->
 <div class="fixed inset-0 pointer-events-none z-[1] overflow-hidden">

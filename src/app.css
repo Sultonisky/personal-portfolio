@@ -133,6 +133,64 @@ html {
 	overflow: hidden;
 }
 
+.grid-line-glow {
+	position: absolute;
+	left: var(--line-left);
+	top: var(--line-top);
+	width: var(--line-width);
+	height: 1px;
+	background: linear-gradient(
+		to right,
+		transparent,
+		rgba(255, 15, 175, 0.1) 12%,
+		rgba(255, 15, 175, 0.95) 50%,
+		rgba(255, 15, 175, 0.1) 88%,
+		transparent
+	);
+	box-shadow: 0 0 7px rgba(255, 15, 175, 0.65);
+	opacity: 0;
+	animation: grid-line-flicker var(--line-duration) ease-in-out infinite;
+	animation-delay: var(--line-delay);
+}
+
+.grid-line-glow:nth-child(1) { --line-left: 4%; --line-top: 12%; --line-width: 9rem; --line-duration: 5.2s; --line-delay: -1.4s; }
+.grid-line-glow:nth-child(2) { --line-left: 22%; --line-top: 27%; --line-width: 5rem; --line-duration: 7.1s; --line-delay: -4.2s; }
+.grid-line-glow:nth-child(3) { --line-left: 38%; --line-top: 43%; --line-width: 12rem; --line-duration: 6.4s; --line-delay: -2.3s; }
+.grid-line-glow:nth-child(4) { --line-left: 61%; --line-top: 19%; --line-width: 6rem; --line-duration: 8.2s; --line-delay: -6.1s; }
+.grid-line-glow:nth-child(5) { --line-left: 77%; --line-top: 36%; --line-width: 10rem; --line-duration: 5.8s; --line-delay: -3.6s; }
+.grid-line-glow:nth-child(6) { --line-left: 9%; --line-top: 64%; --line-width: 6rem; --line-duration: 7.8s; --line-delay: -5.4s; }
+.grid-line-glow:nth-child(7) { --line-left: 31%; --line-top: 79%; --line-width: 8rem; --line-duration: 6.8s; --line-delay: -1.9s; }
+.grid-line-glow:nth-child(8) { --line-left: 53%; --line-top: 58%; --line-width: 5rem; --line-duration: 9s; --line-delay: -7s; }
+.grid-line-glow:nth-child(9) { --line-left: 72%; --line-top: 91%; --line-width: 11rem; --line-duration: 6.1s; --line-delay: -4.5s; }
+.grid-line-glow:nth-child(10) { --line-left: 91%; --line-top: 71%; --line-width: 4rem; --line-duration: 8.6s; --line-delay: -2.8s; }
+
+@keyframes grid-line-flicker {
+	0%, 100% {
+		opacity: 0;
+		transform: scaleX(0.55);
+	}
+	18% {
+		opacity: 0.35;
+	}
+	38% {
+		opacity: 0.08;
+	}
+	56% {
+		opacity: 0.75;
+		transform: scaleX(1);
+	}
+	72% {
+		opacity: 0.12;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.grid-line-glow {
+		animation: none;
+		opacity: 0;
+	}
+}
+
 .page-grid-lines::before {
 	content: '';
 	position: absolute;
