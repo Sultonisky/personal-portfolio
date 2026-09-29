@@ -4,7 +4,7 @@
   import Typewriter from "$lib/components/Typewriter.svelte";
 
   type GridItem =
-    | { type: "stack"; name: string; img: string; level: number }
+    | { type: "stack"; name: string; img: string; level: number; white?: boolean }
     | { type: "filler"; level: number };
 
   const typewriterTexts = [
@@ -54,8 +54,39 @@
     { name: "Laragon", img: "/images/stacks/laragon.svg", level: 3 },
   ];
 
+  const additionalStack = [
+    { name: "Alpine.js", img: "/images/stacks/alpinejs.svg", level: 2, white: true },
+    { name: "Dart", img: "/images/stacks/dart-mono.svg", level: 2, white: true },
+    { name: "Express.js", img: "/images/stacks/expressdotjs.svg", level: 2, white: true },
+    { name: "FastAPI", img: "/images/stacks/fastapi.svg", level: 2, white: true },
+    { name: "Flutter", img: "/images/stacks/flutter-mono.svg", level: 2, white: true },
+    { name: "MongoDB", img: "/images/stacks/mongodb.svg", level: 2, white: true },
+    { name: "Nuxt", img: "/images/stacks/nuxt.svg", level: 2, white: true },
+    { name: "Pinia", img: "/images/stacks/pinia-mono.svg", level: 2, white: true },
+    { name: "Redis", img: "/images/stacks/redis.svg", level: 2, white: true },
+    { name: "Sass", img: "/images/stacks/sass.svg", level: 2, white: true },
+    { name: "SQLite", img: "/images/stacks/sqlite-mono.svg", level: 2, white: true },
+    { name: "Supabase", img: "/images/stacks/supabase-mono.svg", level: 2, white: true },
+    { name: "Vite", img: "/images/stacks/vite.svg", level: 2, white: true },
+    { name: "Vitest", img: "/images/stacks/vitest.svg", level: 2, white: true },
+    { name: "Vue.js", img: "/images/stacks/vuedotjs.svg", level: 2, white: true },
+    { name: "Figma", img: "/images/stacks/figma-mono.svg", level: 2, white: true },
+    { name: "GitHub Actions", img: "/images/stacks/github-actions.svg", level: 2, white: true },
+    { name: "npm", img: "/images/stacks/npm-mono.svg", level: 2, white: true },
+    { name: "pnpm", img: "/images/stacks/pnpm-mono.svg", level: 2, white: true },
+    { name: "Google Cloud", img: "/images/stacks/googlecloud-mono.svg", level: 2, white: true },
+    { name: "GCP API", img: "/images/stacks/gcp-api.svg", level: 2, white: true },
+    { name: "SVG", img: "/images/stacks/svg-mono.svg", level: 2, white: true },
+    { name: "Composer", img: "/images/stacks/composer-mono.svg", level: 2, white: true },
+  ];
+
   // Combine all items for contribution grid
-  const allStackItems: GridItem[] = [...productionStack, ...exploringStack, ...tools].map(
+  const allStackItems: GridItem[] = [
+    ...productionStack,
+    ...exploringStack,
+    ...tools,
+    ...additionalStack,
+  ].map(
     (item) => ({ ...item, type: "stack" as const }),
   );
 
@@ -476,7 +507,7 @@
             >
               <img
                 alt={item.name}
-                class="w-7 h-7 object-contain opacity-70 group-hover:opacity-100"
+                class="w-7 h-7 object-contain opacity-70 group-hover:opacity-100 {item.white ? 'stack-icon-white' : ''}"
                 src={item.img}
               />
               <!-- Tooltip -->

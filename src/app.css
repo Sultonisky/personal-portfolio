@@ -66,6 +66,10 @@ html {
 	transform: scale(1.1);
 }
 
+.stack-icon-white {
+	filter: brightness(0) invert(1);
+}
+
 .contribution-level-0 { background: rgba(29, 36, 39, 0.7); border: 1px solid rgba(51, 63, 67, 0.7); }
 .contribution-level-1 { background: rgba(255, 15, 175, 0.15); border: 1px solid rgba(255, 15, 175, 0.3); }
 .contribution-level-2 { background: rgba(255, 15, 175, 0.3); border: 1px solid rgba(255, 15, 175, 0.5); }
