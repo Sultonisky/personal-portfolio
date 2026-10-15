@@ -3,7 +3,7 @@
 	let showCursor = $state(false);
 	let displayTexts = $state<string[]>(['', '']);
 	let hasAnimated = $state(false);
-	let aboutSectionRef: HTMLDivElement | undefined;
+	let aboutSectionRef = $state<HTMLDivElement | undefined>();
 	
 	$effect(() => {
 		if (typeof window !== 'undefined') {
@@ -59,7 +59,7 @@
 	}
 </script>
 
-<div bind:this={aboutSectionRef} class="prose prose-invert prose-p:font-body-lg prose-p:text-body-lg prose-p:text-on-background prose-p:leading-relaxed max-w-none">
+<div bind:this={aboutSectionRef} class="prose prose-invert prose-p:font-body-lg prose-p:text-body-lg prose-p:text-on-background prose-p:leading-relaxed max-w-none min-h-32">
 	<p class="typewriter-text">{displayTexts[0]}</p>
 	<p class="typewriter-text mt-4">
 		{displayTexts[1]}
