@@ -1,15 +1,18 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+  import { fade } from "svelte/transition";
   import Navbar from "$lib/components/Navbar.svelte";
   import Footer from "$lib/components/Footer.svelte";
   import Typewriter from "$lib/components/Typewriter.svelte";
+  import { socialLinks } from "$lib/social-links";
 
   type GridItem =
     | { type: "stack"; name: string; img: string; level: number; white?: boolean }
     | { type: "filler"; level: number };
 
   const typewriterTexts = [
-    "I like creating web apps, figuring out how data moves around, designing APIs... I like understanding how things work internally, breaking things apart, and rebuilding them in a simpler way.",
-    "My focus is on eliminating redundancy and ensuring that the underlying architecture is as clean and documented as the user-facing interfaces.",
+    "I'm an Information Systems student from Indonesia and a UX-first full-stack developer. I build web apps that feel intuitive on the surface and stay dependable underneath.",
+    "From user flows and accessible interfaces to APIs and data models, I like breaking complex problems down and rebuilding them as simple, maintainable systems.",
   ];
 
   const productionStack = [
@@ -103,16 +106,16 @@
     {
       name: "CTRL Agent",
       img: "/images/projects/CTRLBuild-White.png",
-      link: "https://www.ctrl-build.my.id/",
-      desc: "trl is a terminal-first AI coding agent with a full TUI. It connects to the LLM of your choice and gives it a powerful toolkit — shell access, file editing, LSP diagnostics, web fetch, code search, and more - so it can autonomously work through real engineering tasks while you stay in the loop.This is a modern web application built with React, Vite, and Three.js. It features interactive WebGL particle text systems, fluid cursor effects, and high-performance animations using Lenis scroll.",
+      link: null,
+      desc: "A terminal-first AI coding agent with a full TUI. It connects to your LLM of choice and provides tools for shell access, file editing, LSP diagnostics, web fetch, and code search so you can work through engineering tasks while staying in control.",
       tags: ["OpenCode", "Go", "Python"],
     },
     {
-      name: "Scroll Pay",
+      name: "Scroll",
       img: "/images/projects/logo-scroll.png",
-      link: "https://github.com/Sultonisky/Scroll.git",
-      desc: "Scroll is a lightweight, self-hosted payroll management system designed for small to mid-sized remote-first companies. It gives your HR and finance team a clean, straightforward interface to manage employees, run monthly payroll, handle bonuses, and export pay data - all on your own infrastructure, with no vendor lock-in.",
-      tags: ["Laravel", "PHP", "MySQL", "Bootstrap"],
+      link: "https://github.com/Sultonisky/Scroll",
+      desc: "Self-hosted payroll management for remote-first companies.",
+      tags: ["Laravel", "PHP", "CoreUI", "MySQL"],
     },
     {
       name: "CTRL Build",
@@ -124,14 +127,14 @@
     {
       name: "Slogy",
       img: null,
-      link: "#",
-      desc: "Slogy is an innovative Laravel package that provides activity logging with high data integrity using a cryptographic chain approach (mini blockchain-inspired). It ensures your audit trail remains intact and verifiable, even against privileged insiders with direct database access.",
-      tags: ["PHP", "Composer", "MySQL", "Laravel"],
+      link: "https://github.com/Sultonisky/Slogy",
+      desc: "Laravel activity logging with SHA-256 tamper detection and log verification tools.",
+      tags: ["Laravel", "PHP", "Composer"],
     },
     {
       name: "E-KTM Mobile",
       img: "/images/projects/logo_ketupat.png",
-      link: "#",
+      link: null,
       desc: "A comprehensive tuition payment management system for Bina Sarana Informatika University (UBSI). This system enables students to make tuition payments online using various payment methods integrated with the Midtrans payment gateway.",
       tags: [
         "React Native",
@@ -146,7 +149,7 @@
     {
       name: "Bookingin",
       img: "/images/projects/logo-putih.png",
-      link: "#",
+      link: null,
       desc: "Bookingin is a hotel reservation platform built with Laravel 10, MySQL, HTML, CSS, JavaScript, and Bootstrap 5, featuring a frontend for users and a backend for admins. It integrates the Midtrans Payment Gateway with webhook callbacks and email notifications to ensure smooth and secure booking confirmations.",
       tags: ["Laravel", "MySQL", "Bootstrap", "Midtrans"],
     },
@@ -163,11 +166,108 @@
     {
       name: "Titip Kebaikan",
       img: "/images/projects/logo-tb.png",
-      link: "#",
+      link: null,
       desc: "Titip Kebaikan for Yayasan At-Tarbiyah Pintu Air is a comprehensive web-based platform designed for foundation management. It streamlines donation processing, program management, and financial reporting to ensure transparency and efficiency in charitable operations.",
       tags: ["Laravel", "MySQL", "Tailwind", "Bootstrap", "Midtrans"],
     },
   ];
+
+  const featuredProjects = personalProjects
+    .filter(({ name }) => name === "Slogy" || name === "Scroll")
+    .reverse();
+  let featuredProjectIndex = $state(0);
+  let featuredProject = $derived(featuredProjects[featuredProjectIndex]);
+  let featuredPointerStartX = 0;
+  let featuredPointerId = $state<number | null>(null);
+  let isFeaturedHovered = false;
+  let isFeaturedFocused = false;
+  let isFeaturedDragging = false;
+  let scheduleFeaturedProjectRotation = () => {};
+
+  function getFeaturedProjectImage(item: (typeof featuredProjects)[number]) {
+    return item.img ?? (item.name === "Slogy" ? "/images/projects/slogy-logo-r.png" : null);
+  }
+
+  function showFeaturedProject(index: number) {
+    featuredProjectIndex = (index + featuredProjects.length) % featuredProjects.length;
+    scheduleFeaturedProjectRotation();
+  }
+
+  onMount(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let rotationTimeout: ReturnType<typeof setTimeout> | undefined;
+
+    scheduleFeaturedProjectRotation = () => {
+      window.clearTimeout(rotationTimeout);
+
+      if (
+        isFeaturedHovered ||
+        isFeaturedFocused ||
+        isFeaturedDragging ||
+        document.hidden ||
+        reducedMotion.matches
+      ) {
+        return;
+      }
+
+      rotationTimeout = window.setTimeout(() => {
+        showFeaturedProject(featuredProjectIndex + 1);
+      }, 4_000);
+    };
+
+    const handleVisibilityChange = () => scheduleFeaturedProjectRotation();
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    reducedMotion.addEventListener("change", handleVisibilityChange);
+    scheduleFeaturedProjectRotation();
+
+    return () => {
+      window.clearTimeout(rotationTimeout);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      reducedMotion.removeEventListener("change", handleVisibilityChange);
+    };
+  });
+
+  function handleFeaturedFocusOut(e: FocusEvent) {
+    const carousel = e.currentTarget as HTMLElement;
+    if (e.relatedTarget instanceof Node && carousel.contains(e.relatedTarget)) return;
+
+    isFeaturedFocused = false;
+    scheduleFeaturedProjectRotation();
+  }
+
+  function startFeaturedProjectDrag(e: PointerEvent) {
+    if (
+      e.button !== 0 ||
+      (e.target instanceof Element && e.target.closest("a, button"))
+    ) {
+      return;
+    }
+
+    featuredPointerStartX = e.clientX;
+    featuredPointerId = e.pointerId;
+    isFeaturedDragging = true;
+    scheduleFeaturedProjectRotation();
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+  }
+
+  function endFeaturedProjectDrag(e: PointerEvent) {
+    if (featuredPointerId !== e.pointerId) return;
+
+    const distance = e.clientX - featuredPointerStartX;
+    featuredPointerId = null;
+    isFeaturedDragging = false;
+
+    if (Math.abs(distance) > 45) {
+      showFeaturedProject(featuredProjectIndex + (distance < 0 ? 1 : -1));
+    } else {
+      scheduleFeaturedProjectRotation();
+    }
+
+    const carousel = e.currentTarget as HTMLElement;
+    if (carousel.hasPointerCapture(e.pointerId)) {
+      carousel.releasePointerCapture(e.pointerId);
+    }
+  }
 
   function handleAnchorClick(e: MouseEvent, href: string) {
     e.preventDefault();
@@ -269,66 +369,263 @@
       ></div>
     </div>
 
-    <div class="max-w-3xl z-10">
-      <!-- Main Heading -->
-      <h1
-        class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-background mb-6 text-balance leading-tight"
-      >
-        <span
-          class="block text-on-surface-variant text-sm md:text-base font-label-caps tracking-widest uppercase mb-2"
-          >Hello, there</span
+    <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 items-center gap-12 lg:gap-10">
+      <div class="lg:col-span-7">
+        <h1
+          class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-background mb-6 text-balance leading-tight"
         >
-        I'm Mohammad Sultoni.
-      </h1>
+          <span
+            class="block text-on-surface-variant text-sm md:text-base font-label-caps tracking-widest uppercase mb-2"
+            >Hello, there</span
+          >
+          I'm Mohammad Sultoni.
+        </h1>
 
-      <!-- Subheading with typing effect simulation -->
-      <p
-        class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl text-pretty leading-relaxed mb-8"
-      >
-        A <span class="text-primary font-semibold"
-          >Full Stack Web Developer</span
-        > who designs and builds clean, scalable systems — from database architecture
-        and API design to smooth, accessible frontends. Currently focused on backend
-        engineering with Laravel &amp; PHP, workflow automation, and code that stays
-        simple to maintain.
-      </p>
+        <p
+          class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl text-pretty leading-relaxed mb-8"
+        >
+          A <span class="text-primary font-semibold"
+            >UX-first Full-Stack Developer</span
+          > based in Indonesia. I build intuitive web experiences and dependable
+          systems, working primarily with Laravel &amp; PHP across accessible
+          interfaces, APIs, and data layers.
+        </p>
 
-      <!-- CTA + Social Links -->
-      <div class="flex flex-wrap items-center gap-4">
-        <a
-          class="bg-[#1D2427] border border-primary/40 text-primary px-8 py-4 rounded-lg flex items-center gap-3 hover:bg-[#1D2427]/80 hover:border-primary hover:scale-105 transition-all duration-300 font-label-caps text-label-caps"
-          href="#stack"
-          onclick={(e) => handleAnchorClick(e, "#stack")}
-        >
-          <span class="material-symbols-outlined text-[20px]">terminal</span>
-          Explore Stack
-        </a>
-        <a
-          class="flex items-center justify-center w-11 h-11 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/60 hover:border-primary/50 hover:bg-primary/10 hover:scale-110 transition-all duration-300"
-          href="https://www.linkedin.com/in/mohammad-sultoni-a529b0371"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="LinkedIn"
-        >
-          <img
-            alt="LinkedIn"
-            class="w-5 h-auto"
-            src="/images/stacks/linkedin.svg"
-          />
-        </a>
-        <a
-          class="flex items-center justify-center w-11 h-11 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/60 hover:border-primary/50 hover:bg-primary/10 hover:scale-110 transition-all duration-300"
-          href="https://github.com/Sultonisky"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="GitHub"
-        >
-          <img
-            alt="GitHub"
-            class="w-5 h-auto"
-            src="/images/stacks/github.svg"
-          />
-        </a>
+        <div class="flex flex-wrap items-center gap-3">
+          <a
+            class="bg-primary text-[#13181A] px-6 py-3.5 rounded-lg flex items-center gap-2 hover:brightness-110 hover:-translate-y-0.5 transition-all duration-300 font-label-caps text-label-caps font-semibold"
+            href="#projects"
+            onclick={(e) => handleAnchorClick(e, "#projects")}
+          >
+            <span class="material-symbols-outlined text-[20px]">work</span>
+            View Projects
+          </a>
+          <a
+            class="bg-[#1D2427]/70 border border-[#333F43] text-on-background px-6 py-3.5 rounded-lg flex items-center gap-2 hover:border-primary/50 hover:text-primary transition-all duration-300 font-label-caps text-label-caps"
+            href="#contact"
+            onclick={(e) => handleAnchorClick(e, "#contact")}
+          >
+            <span class="material-symbols-outlined text-[20px]">mail</span>
+            Let's Talk
+          </a>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 mt-7">
+          <span class="font-mono text-xs text-on-surface-variant mr-1">Find me</span>
+          <a
+            class="flex items-center justify-center w-10 h-10 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/60 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
+            href={socialLinks.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+          >
+            <img alt="" class="w-5 h-auto" src="/images/stacks/linkedin.svg" />
+          </a>
+          <a
+            class="flex items-center justify-center w-10 h-10 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/60 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
+            href={socialLinks.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+          >
+            <img alt="" class="w-5 h-auto" src="/images/stacks/github.svg" />
+          </a>
+          <a
+            class="flex items-center justify-center w-10 h-10 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/60 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
+            href={socialLinks.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+          >
+            <span class="material-symbols-outlined text-xl">photo_camera</span>
+          </a>
+        </div>
+      </div>
+
+      <div
+        class="featured-project-carousel lg:col-span-5 group relative isolate overflow-hidden rounded-2xl border border-[#333F43]/70 p-5 sm:p-7 shadow-xl backdrop-blur-xl transition-all duration-300 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10"
+        role="region"
+        aria-roledescription="carousel"
+        aria-label={`Featured project: ${featuredProject.name}`}
+        class:is-dragging={featuredPointerId !== null}
+        onpointerenter={() => {
+          isFeaturedHovered = true;
+          scheduleFeaturedProjectRotation();
+        }}
+        onpointerleave={() => {
+          isFeaturedHovered = false;
+          scheduleFeaturedProjectRotation();
+        }}
+        onpointerdown={startFeaturedProjectDrag}
+        onpointerup={endFeaturedProjectDrag}
+        onpointercancel={endFeaturedProjectDrag}
+        onfocusin={() => {
+          isFeaturedFocused = true;
+          scheduleFeaturedProjectRotation();
+        }}
+        onfocusout={handleFeaturedFocusOut}
+      >
+        <div class="project-card-grid opacity-20 group-hover:opacity-35" aria-hidden="true"></div>
+        <div class="relative z-10 flex flex-col gap-3">
+          <div class="featured-project-content">
+            {#key featuredProjectIndex}
+              <div
+                class="featured-project-panel"
+                in:fade={{ duration: 240 }}
+                out:fade={{ duration: 240 }}
+              >
+                <div class="relative z-10">
+
+                  <div class="flex items-start gap-4 mb-5">
+                    {#if getFeaturedProjectImage(featuredProject)}
+                      <div class="shrink-0 rounded-lg p-1">
+                        <img
+                          src={getFeaturedProjectImage(featuredProject) ?? ""}
+                          alt={`${featuredProject.name} logo`}
+                          class="w-12 h-12 object-contain rounded-md"
+                          width="48"
+                          height="48"
+                        />
+                      </div>
+                    {:else}
+                      <div class="shrink-0 rounded-lg bg-[#13181A]/80 border border-[#333F43]/70 p-2.5 text-primary">
+                        <span class="material-symbols-outlined text-2xl">deployed_code</span>
+                      </div>
+                    {/if}
+                    <div class="min-w-0">
+                      <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                        <h2
+                          class="font-headline-md text-headline-md text-on-background"
+                        >
+                          {featuredProject.name}
+                        </h2>
+
+                      </div>
+                      <p class="text-on-surface-variant text-body-md leading-relaxed mt-1 line-clamp-3">
+                        {featuredProject.desc}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+        {#if featuredProject.name === "Slogy"}
+          <div
+            class="relative z-10 rounded-xl border border-[#333F43]/70 p-4 sm:p-5 mb-5 overflow-hidden"
+            aria-hidden="true"
+          >
+            <div class="flex items-center justify-between gap-2 pb-3 border-b border-[#333F43]/50">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-lg">verified_user</span>
+                <span class="font-mono text-[10px] sm:text-xs text-on-surface-variant">INTEGRITY CHAIN</span>
+              </div>
+            </div>
+            <div class="space-y-3 pt-4">
+              {#each ["CREATED", "UPDATED"] as action, i}
+                <div class="flex items-center gap-3">
+                  <span class="material-symbols-outlined text-primary text-lg">link</span>
+                  <div class="min-w-0 flex-1">
+                    <div class="font-mono text-[10px] text-on-surface-variant">ENTRY 00{i + 1} · {action}</div>
+                    <div class="font-mono text-xs text-on-background/90 truncate">event → hash → previous</div>
+                  </div>
+                  <span class="material-symbols-outlined text-primary/80 text-base">verified</span>
+                </div>
+                {#if i === 0}
+                  <div class="ml-2 h-3 border-l border-dashed border-primary/40" aria-hidden="true"></div>
+                {/if}
+              {/each}
+            </div>
+            <div class="absolute -right-10 -bottom-12 w-36 h-36 rounded-full bg-primary/10 blur-3xl pointer-events-none"></div>
+          </div>
+        {:else if featuredProject.name === "Scroll"}
+          <div
+            class="relative z-10 rounded-xl border border-[#333F43]/70 p-3 sm:p-4 mb-5 overflow-hidden"
+            aria-hidden="true"
+          >
+            <div class="flex items-center justify-between gap-2 pb-2.5 border-b border-[#333F43]/50">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-lg">payments</span>
+                <span class="font-mono text-[10px] sm:text-xs text-on-surface-variant">PAYROLL WORKFLOW</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-[1fr_auto_1fr_auto_1fr] items-start gap-1 pt-3">
+              {#each [
+                { label: "DRAFT", icon: "edit_note" },
+                { label: "APPROVED", icon: "task_alt" },
+                { label: "PAID", icon: "account_balance" },
+              ] as step, i}
+                <div class="flex flex-col items-center gap-1.5 text-center">
+                  <span class="flex h-8 w-8 items-center justify-center rounded-lg border border-primary/25 bg-primary/10 text-primary">
+                    <span class="material-symbols-outlined text-base">{step.icon}</span>
+                  </span>
+                  <span class="font-mono text-[9px] sm:text-[10px] text-on-surface-variant">{step.label}</span>
+                </div>
+                {#if i < 2}
+                  <span
+                    class="mt-4 w-5 sm:w-8 border-t border-primary/50"
+                    aria-hidden="true"
+                  ></span>
+                {/if}
+              {/each}
+            </div>
+            <div class="mt-3 rounded-lg border border-[#333F43]/50 bg-[#13181A]/10 px-2.5 py-1.5 flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-primary text-base">groups</span>
+              <span class="font-mono text-[10px] sm:text-xs text-on-surface-variant flex-1">EMPLOYEE PAYROLL</span>
+              <span class="material-symbols-outlined text-primary/80 text-base">arrow_forward</span>
+              <span class="font-mono text-[10px] sm:text-xs text-on-surface-variant">CSV EXPORT</span>
+            </div>
+            <div class="absolute -right-10 -bottom-12 w-36 h-36 rounded-full bg-primary/10 blur-3xl pointer-events-none"></div>
+          </div>
+        {:else}
+          <div
+            class="relative z-10 flex items-center justify-center rounded-xl border border-[#333F43]/70 bg-[#13181A]/75 p-4 mb-5 h-36 overflow-hidden"
+            aria-hidden="true"
+          >
+            {#if getFeaturedProjectImage(featuredProject)}
+              <img
+                src={getFeaturedProjectImage(featuredProject) ?? ""}
+                alt=""
+                class="max-h-full max-w-full object-contain"
+                loading="lazy"
+              />
+            {:else}
+              <span class="material-symbols-outlined text-6xl text-primary/70">deployed_code</span>
+            {/if}
+            <div class="absolute inset-0 bg-gradient-to-t from-[#13181A]/40 to-transparent pointer-events-none"></div>
+          </div>
+        {/if}
+
+                <div class="relative z-10 flex flex-col gap-3">
+                  {#if featuredProject.link}
+                    <a
+                      class="inline-flex w-full items-center justify-between gap-2 rounded-lg border border-primary/30 bg-primary/5 px-4 py-3 text-primary hover:bg-primary/10 hover:border-primary/60 font-label-caps text-label-caps transition-all"
+                      href={featuredProject.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Explore {featuredProject.name} on GitHub
+                      <span class="material-symbols-outlined text-base">arrow_outward</span>
+                    </a>
+                  {:else}
+                    <span class="font-label-caps text-label-caps text-on-surface-variant/70">
+                      Details on request
+                    </span>
+                  {/if}
+                </div>
+              </div>
+            {/key}
+          </div>
+          <div class="flex items-center justify-center gap-2 pt-1" role="group" aria-label="Featured project pagination">
+            {#each featuredProjects as project, i}
+              <button
+                type="button"
+                class="h-2.5 cursor-pointer rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-[#13181A] {i === featuredProjectIndex ? 'w-6 bg-primary' : 'w-2.5 bg-on-surface-variant/40 hover:bg-on-surface-variant'}"
+                aria-pressed={i === featuredProjectIndex}
+                aria-label={`Show ${project.name} featured project`}
+                onclick={() => showFeaturedProject(i)}
+              ></button>
+            {/each}
+          </div>
+        </div>
       </div>
     </div>
 
@@ -386,36 +683,126 @@
       ></div>
     </div>
 
-    <div
-      class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start relative z-10"
-    >
-      <div class="md:col-span-4">
-        <h2 class="font-headline-md text-headline-md text-on-background mb-2">
-          System Context
-        </h2>
-        <p
-          class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest"
-        >
-          About Me
-        </p>
-      </div>
-      <div
-        class="md:col-span-8 glass rounded-2xl p-6 md:p-8 relative overflow-hidden group shadow-xl"
+    <div class="relative z-10 mb-8 flex flex-col gap-2">
+      <p
+        class="font-label-caps text-label-caps text-primary uppercase tracking-widest"
+      >
+        About Me
+      </p>
+      <h2 class="font-headline-md text-headline-md text-on-background">
+        System Context
+      </h2>
+      <p class="text-on-surface-variant text-body-md">
+        A little about my background, focus, and the way I approach building.
+      </p>
+    </div>
+
+    <div class="system-context-grid relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-x-5 md:gap-x-6">
+      <article
+        class="glass rounded-2xl p-6 md:p-8 relative overflow-hidden group shadow-xl lg:col-span-2"
       >
         <div
-          class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-transparent opacity-50"
+          class="absolute top-0 left-0 w-full h-1 opacity-70"
         ></div>
         <div
-          class="flex items-center gap-3 mb-6 border-b border-[#333F43]/30 pb-4"
+          class="flex flex-wrap items-center justify-between gap-3 mb-6 border-b border-[#333F43]/40 pb-4"
         >
-          <span class="material-symbols-outlined text-primary">code_blocks</span
-          >
-          <span class="font-label-caps text-label-caps text-on-surface-variant"
-            >~/profile/readme.md</span
-          >
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="material-symbols-outlined text-primary">code_blocks</span>
+            <span class="font-label-caps text-label-caps text-on-background font-semibold">
+              Profile
+            </span>
+          </div>
+          <span class="font-mono text-xs text-on-surface-variant">
+            ~/profile/readme.md
+          </span>
         </div>
         <Typewriter texts={typewriterTexts} />
+      </article>
+
+      <div class="system-context-connector system-context-connector-branch" aria-hidden="true">
+        <svg class="h-full w-full text-primary" viewBox="0 0 100 28" preserveAspectRatio="none">
+          <path class="system-context-connector-mobile" d="M50 0V28" />
+          <path class="system-context-connector-desktop" d="M50 0V14H25V28M50 14H75V28" />
+          <circle class="system-context-connector-desktop" cx="50" cy="14" r="1.5" />
+        </svg>
       </div>
+
+      <article
+        class="glass rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-xl flex flex-col"
+      >
+        <div
+          class="absolute top-0 left-0 w-full h-1 opacity-70"
+        ></div>
+        <div class="flex items-center justify-between gap-3 mb-6">
+          <span class="material-symbols-outlined text-primary">deployed_code</span>
+          <div class="flex flex-1 items-center justify-between gap-3 min-w-0">
+            <h3 class="font-body-lg text-body-lg text-on-background font-semibold">
+              What I Build
+            </h3>
+            <span class="font-mono text-xs text-on-surface-variant text-right">
+              ~/profile/focus-areas.md
+            </span>
+          </div>
+        </div>
+        <ul class="flex flex-1 flex-col justify-between gap-4 text-on-surface-variant text-body-md leading-relaxed">
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary text-lg mt-0.5">check_circle</span>
+            <span>Full-stack web applications with clean, responsive interfaces</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary text-lg mt-0.5">check_circle</span>
+            <span>Backend systems and REST APIs backed by reliable data layers</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary text-lg mt-0.5">check_circle</span>
+            <span>Internal business tools, management systems, and automation</span>
+          </li>
+        </ul>
+      </article>
+
+      <div class="system-context-connector system-context-connector-mobile-branch" aria-hidden="true">
+        <svg class="h-full w-full text-primary" viewBox="0 0 100 28" preserveAspectRatio="none">
+          <path d="M50 0V28" />
+        </svg>
+      </div>
+
+      <article
+        class="glass rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-xl flex flex-col"
+      >
+        <div
+          class="absolute top-0 left-0 w-full h-1"
+        ></div>
+        <div class="flex items-center justify-between gap-3 mb-6">
+          <span class="material-symbols-outlined text-primary">conversion_path</span>
+          <div class="flex flex-1 items-center justify-between gap-3 min-w-0">
+            <h3 class="font-body-lg text-body-lg text-on-background font-semibold">
+              How I Build
+            </h3>
+            <span class="font-mono text-xs text-on-surface-variant text-right">
+              ~/profile/working-process.md
+            </span>
+          </div>
+        </div>
+        <ol class="flex flex-1 flex-col justify-between gap-3 text-on-surface-variant text-body-md leading-relaxed">
+          <li class="flex items-center gap-3">
+            <span class="font-mono text-xs text-primary bg-primary/10 border border-primary/20 rounded-md px-2 py-1">01</span>
+            <span>Understand the user and the problem</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="font-mono text-xs text-primary bg-primary/10 border border-primary/20 rounded-md px-2 py-1">02</span>
+            <span>Design a clear, accessible experience</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="font-mono text-xs text-primary bg-primary/10 border border-primary/20 rounded-md px-2 py-1">03</span>
+            <span>Build and test the system end to end</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="font-mono text-xs text-primary bg-primary/10 border border-primary/20 rounded-md px-2 py-1">04</span>
+            <span>Improve it through feedback and iteration</span>
+          </li>
+        </ol>
+      </article>
     </div>
   </section>
 
@@ -682,21 +1069,27 @@
                     {/if}
                   </div>
                 </div>
-                <a
-                  class="group/link inline-flex items-center gap-1.5 font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300"
-                  href={item.link}
-                  target="_blank"
-                  rel="noopener"
-                >
-                  <span
-                    class="underline-offset-4 group-hover/link:underline decoration-primary/50"
-                    >View</span
+                {#if item.link}
+                  <a
+                    class="group/link inline-flex items-center gap-1.5 font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300"
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                  <span
-                    class="material-symbols-outlined text-base transition-transform duration-300 group-hover/link:translate-x-1 group-hover/link:-translate-y-0.5"
-                    >arrow_outward</span
-                  >
-                </a>
+                    <span
+                      class="underline-offset-4 group-hover/link:underline decoration-primary/50"
+                      >View</span
+                    >
+                    <span
+                      class="material-symbols-outlined text-base transition-transform duration-300 group-hover/link:translate-x-1 group-hover/link:-translate-y-0.5"
+                      >arrow_outward</span
+                    >
+                  </a>
+                {:else}
+                  <span class="font-label-caps text-label-caps text-on-surface-variant/70">
+                    Details on request
+                  </span>
+                {/if}
               </div>
 
               <div class="flex flex-col gap-3">
@@ -752,7 +1145,9 @@
                         {/if}
                       </div>
                     </div>
-                    <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href={duplicateItem.link} target="_blank" rel="noopener">View ↗</a>
+                    <span class="font-label-caps text-label-caps text-on-surface-variant/70">
+                      {duplicateItem.link ? "View ↗" : "Details on request"}
+                    </span>
                   </div>
                   <div class="flex flex-col gap-3">
                     <div class="flex items-baseline gap-2">
@@ -845,21 +1240,27 @@
                       {/if}
                     </div>
                   </div>
-                  <a
-                    class="group/link inline-flex items-center gap-1.5 font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300"
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    <span
-                      class="underline-offset-4 group-hover/link:underline decoration-primary/50"
-                      >View</span
+                  {#if item.link}
+                    <a
+                      class="group/link inline-flex items-center gap-1.5 font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300"
+                      href={item.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                    <span
-                      class="material-symbols-outlined text-base transition-transform duration-300 group-hover/link:translate-x-1 group-hover/link:-translate-y-0.5"
-                      >arrow_outward</span
-                    >
-                  </a>
+                      <span
+                        class="underline-offset-4 group-hover/link:underline decoration-primary/50"
+                        >View</span
+                      >
+                      <span
+                        class="material-symbols-outlined text-base transition-transform duration-300 group-hover/link:translate-x-1 group-hover/link:-translate-y-0.5"
+                        >arrow_outward</span
+                      >
+                    </a>
+                  {:else}
+                    <span class="font-label-caps text-label-caps text-on-surface-variant/70">
+                      Details on request
+                    </span>
+                  {/if}
                 </div>
 
                 <div class="flex flex-col gap-3">
@@ -914,7 +1315,9 @@
                           {/if}
                         </div>
                       </div>
-                      <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href={item.link} target="_blank" rel="noopener">View ↗</a>
+                      <span class="font-label-caps text-label-caps text-on-surface-variant/70">
+                        {item.link ? "View ↗" : "Details on request"}
+                      </span>
                     </div>
                     <div class="flex flex-col gap-3">
                       <div class="flex items-baseline gap-2">
@@ -1022,14 +1425,14 @@
               </div>
               <a
                 class="group flex items-center gap-4 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/45 p-4 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
-                href="mailto:muhsultonipml11@gmail.com"
+                href={`mailto:${socialLinks.email}`}
               >
                 <div class="flex items-center justify-center w-11 h-11 rounded-lg bg-primary/10 text-primary shrink-0">
                   <span class="material-symbols-outlined">mail</span>
                 </div>
                 <div class="flex-1 min-w-0">
                   <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest text-xs mb-0.5">Email</p>
-                  <p class="font-body-md text-on-background truncate">muhsultonipml11@gmail.com</p>
+                  <p class="font-body-md text-on-background truncate">{socialLinks.email}</p>
                 </div>
                 <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">arrow_outward</span>
               </a>
@@ -1048,7 +1451,7 @@
               </a>
               <a
                 class="group flex items-center gap-4 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/45 p-4 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
-                href="https://github.com/Sultonisky"
+                href={socialLinks.github}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -1069,7 +1472,7 @@
               </a>
               <a
                 class="group flex items-center gap-4 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/45 p-4 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
-                href="https://www.linkedin.com/"
+                href={socialLinks.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -1080,7 +1483,26 @@
                   <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest text-xs mb-0.5">
                     LinkedIn
                   </p>
-                  <p class="font-body-md text-on-background">Connect professionally</p>
+                  <p class="font-body-md text-on-background">mohammad-sultoni</p>
+                </div>
+                <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">
+                  arrow_outward
+                </span>
+              </a>
+              <a
+                class="group flex items-center gap-4 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/45 p-4 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
+                href={socialLinks.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div class="flex items-center justify-center w-11 h-11 rounded-lg bg-primary/10 text-primary shrink-0">
+                  <span class="material-symbols-outlined">photo_camera</span>
+                </div>
+                <div class="flex-1">
+                  <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest text-xs mb-0.5">
+                    Instagram
+                  </p>
+                  <p class="font-body-md text-on-background">@sultoniiii</p>
                 </div>
                 <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">
                   arrow_outward
