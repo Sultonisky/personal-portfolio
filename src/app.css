@@ -122,7 +122,7 @@ html {
 
 /* Glassmorphism Base */
 .glass {
-	background: rgba(29, 36, 39, 0.5);
+	/* background: rgba(29, 36, 39, 0.5); */
 	backdrop-filter: blur(16px);
 	-webkit-backdrop-filter: blur(16px);
 	border: 1px solid rgba(255, 255, 255, 0.1);
@@ -590,6 +590,96 @@ html {
 
 .corner-accent {
 	animation: corner-accent-glow 3s ease-in-out infinite;
+}
+
+.featured-project-carousel {
+	cursor: default;
+	touch-action: pan-y;
+}
+
+.featured-project-carousel.is-dragging {
+	cursor: grabbing;
+}
+
+.featured-project-content {
+	display: grid;
+	min-height: 24.5rem;
+}
+
+@media (min-width: 480px) {
+	.featured-project-content {
+		min-height: 22.9rem;
+	}
+}
+
+@media (min-width: 640px) {
+	.featured-project-content {
+		min-height: 23.4rem;
+	}
+}
+
+@media (min-width: 800px) {
+	.featured-project-content {
+		min-height: 21.8rem;
+	}
+}
+
+@media (min-width: 1024px) {
+	.featured-project-content {
+		min-height: 25rem;
+	}
+}
+
+@media (min-width: 1200px) {
+	.featured-project-content {
+		min-height: 23.4rem;
+	}
+}
+
+.featured-project-panel {
+	grid-area: 1 / 1;
+	min-width: 0;
+}
+
+.system-context-grid {
+	row-gap: 0;
+}
+
+.system-context-connector {
+	height: 1.75rem;
+	color: #ff0faf;
+}
+
+.system-context-connector-branch {
+	grid-column: 1 / -1;
+}
+
+.system-context-connector svg path {
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 1.25;
+	stroke-opacity: 0.55;
+	vector-effect: non-scaling-stroke;
+}
+
+.system-context-connector svg circle {
+	fill: currentColor;
+	fill-opacity: 0.7;
+}
+
+.system-context-connector-desktop {
+	display: none;
+}
+
+@media (min-width: 1024px) {
+	.system-context-connector-mobile,
+	.system-context-connector-mobile-branch {
+		display: none;
+	}
+
+	.system-context-connector-desktop {
+		display: initial;
+	}
 }
 
 /* Project cards: digital case-file treatment */
