@@ -13,7 +13,6 @@
 		<div class="flex space-x-6">
 			<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-primary rounded px-2 py-1" href={socialLinks.github} target="_blank" rel="noopener noreferrer">GitHub</a>
 			<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-primary rounded px-2 py-1" href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
-			<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-primary rounded px-2 py-1" href={socialLinks.instagram} target="_blank" rel="noopener noreferrer">Instagram</a>
 			<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-primary rounded px-2 py-1" href={`mailto:${socialLinks.email}`}>Email</a>
 		</div>
 	</div>
