@@ -13,6 +13,69 @@
     "That curiosity has taken me from local experiments to deploying projects and learning what it takes to keep them running. I especially enjoy exploring PHP and Laravel, and I'm growing toward full-stack development. As AI becomes part of my workflow, I hope to become an AI orchestrator not just someone who uses AI, but someone who can eventually build AI-powered tools of my own, guided by human judgment and care. Away from code, I take my sport bike out, less for the destination than for the new things I notice along the way.",
   ];
 
+  function getCurrentExperienceDuration(startDate: string) {
+    const start = new Date(`${startDate}T00:00:00`);
+    const today = new Date();
+    const months =
+      (today.getFullYear() - start.getFullYear()) * 12 +
+      today.getMonth() -
+      start.getMonth() +
+      1;
+
+    return `${Math.max(months, 1)} ${months === 1 ? "month" : "months"}`;
+  }
+
+  let mahakaryaDuration = $state(getCurrentExperienceDuration("2026-07-01"));
+
+  const workExperiences = [
+    {
+      role: "Information Technology Developer",
+      company: "PT. Mahakarya Sukses Indonesia",
+      logo: "/images/experience/mito-electronic.png",
+      employmentType: "Internship",
+      period: "Jul 2026 - Present",
+      duration: null,
+      startDate: "2026-07-01",
+      location: "Jakarta, Indonesia · On-site",
+      summary:
+        "Contributing to internal technology initiatives and web development workflows while collaborating with the team to support practical business needs.",
+      skills: [
+        "Git",
+        "English",
+        "Google Apps Script",
+        "Communication",
+        "Laravel",
+        "JavaScript",
+        "PHP",
+        "GitHub",
+        "IT Development",
+        "Full-Stack Development",
+      ],
+    },
+    {
+      role: "Full Stack Web Developer",
+      company: "Systeric",
+      logo: "/images/experience/systeric.webp",
+      employmentType: "Internship",
+      period: "Jul 2025 - Dec 2025",
+      duration: "6 months",
+      location: "Bali, Indonesia · Remote",
+      summary:
+        "Worked across frontend and backend development to build and improve web experiences, APIs, and supporting application workflows in a remote team environment.",
+      skills: [
+        "NestJS",
+        "Git",
+        "English",
+        "Windmill Dev",
+        "Communication",
+        "JavaScript",
+        "TypeScript",
+        "GitHub",
+        "Full-Stack Development",
+      ],
+    },
+  ];
+
   const productionStack: StackItem[] = [
     { name: "Laravel", img: "/images/stacks/laravel.svg", level: 4 },
     { name: "PHP", img: "/images/stacks/php.svg", level: 4 },
@@ -307,7 +370,9 @@
     "Alpine.js": "/images/stacks/alpinejs.svg",
     Composer: "/images/stacks/composer-mono.svg",
     CSS: "/images/stacks/css.svg",
+    Git: "/images/stacks/git.svg",
     GitHub: "/images/stacks/github.svg",
+    "Google Apps Script": "/images/stacks/google-apps-script.svg",
     HTML: "/images/stacks/html.svg",
     JavaScript: "/images/stacks/javascript.svg",
     Laravel: "/images/stacks/laravel.svg",
@@ -327,6 +392,7 @@
     "TypeScript": "/images/stacks/ts.svg",
     Turborepo: "/images/stacks/turborepo.svg",
     Vite: "/images/stacks/vite.svg",
+    "Windmill Dev": "/images/stacks/windmill.svg",
     "GCP API": "/images/stacks/gcp-api.svg",
     "GCP": "/images/stacks/googlecloud-mono.svg",
   };
@@ -364,6 +430,10 @@
   }
 
   onMount(() => {
+    const experienceDurationInterval = window.setInterval(() => {
+      mahakaryaDuration = getCurrentExperienceDuration("2026-07-01");
+    }, 24 * 60 * 60 * 1000);
+
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let rotationTimeout: ReturnType<typeof setTimeout> | undefined;
 
@@ -391,6 +461,7 @@
     scheduleFeaturedProjectRotation();
 
     return () => {
+      window.clearInterval(experienceDurationInterval);
       window.clearTimeout(rotationTimeout);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       reducedMotion.removeEventListener("change", handleVisibilityChange);
@@ -953,6 +1024,100 @@
           </li>
         </ol>
       </article>
+    </div>
+  </section>
+
+  <!-- Work Experience Section -->
+  <section
+    class="px-margin-mobile md:px-gutter max-w-container-max mx-auto w-full py-section-gap border-t border-[#333F43]/30 relative overflow-hidden"
+    id="experience"
+  >
+    <div class="section-cable section-cable-right" aria-hidden="true">
+      <span class="section-cable-wire"></span>
+      <span class="section-cable-node section-cable-node-top"></span>
+      <span class="section-cable-node section-cable-node-bottom"></span>
+    </div>
+    <div class="section-cable-bridge" aria-hidden="true"></div>
+
+    <div class="absolute -left-20 top-1/3 w-80 h-80 rounded-full blur-3xl opacity-30 pointer-events-none"></div>
+    <div class="absolute -right-20 bottom-1/4 w-80 h-80 rounded-full blur-3xl opacity-30 pointer-events-none"></div>
+
+    <div class="absolute top-20 right-[10%] opacity-[0.11] animate-float pointer-events-none hidden lg:block">
+      <span class="material-symbols-outlined text-5xl text-primary">work_history</span>
+    </div>
+
+    <div class="absolute top-0 left-0 w-24 h-24 pointer-events-none corner-accent">
+      <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-primary/40 to-transparent"></div>
+      <div class="absolute top-0 left-0 h-full w-[1px] bg-gradient-to-b from-primary/40 to-transparent"></div>
+    </div>
+
+    <div class="relative z-10">
+      <div class="mb-12">
+        <p class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-2">
+          Work Experience
+        </p>
+        <h2 class="font-headline-md text-headline-md text-on-background mb-2">
+          Where I Have Built
+        </h2>
+        <p class="text-on-surface-variant text-body-md">
+          A look at the team experience and practical work that shaped how I build.
+        </p>
+      </div>
+
+      <div class="glass rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-xl">
+        <div class="relative z-10 flex flex-col">
+          {#each workExperiences as experience, experienceIndex}
+            <article class:work-experience-divider={experienceIndex < workExperiences.length - 1} class="relative pb-6 pt-2 first:pt-0 last:pb-0">
+            <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto] gap-6 lg:gap-10">
+              <div class="flex gap-4 md:gap-6">
+                <div class="flex flex-col items-center shrink-0">
+                  <div class="flex items-center justify-center w-11 h-11 rounded-xl border border-primary/30 bg-primary/10 text-primary overflow-hidden">
+                    {#if experience.logo}
+                      <img src={experience.logo} alt={`${experience.company} logo`} class="w-full h-full object-contain p-2" />
+                    {:else}
+                      <span class="material-symbols-outlined">work</span>
+                    {/if}
+                  </div>
+                  <div class="w-px flex-1 mt-3 bg-gradient-to-b from-primary/50 to-transparent"></div>
+                </div>
+
+                <div class="min-w-0">
+                  <div class="flex flex-wrap items-center gap-2 mb-2">
+                    <h3 class="font-headline-md text-headline-md text-on-background leading-tight">
+                      {experience.role}
+                    </h3>
+                    <span class="font-label-caps text-label-caps text-white border border-primary/25 bg-primary/10 rounded-md px-2 py-1">
+                      {experience.employmentType}
+                    </span>
+                  </div>
+                  <p class="font-body-lg text-body-lg text-on-background font-semibold">
+                    {experience.company}
+                  </p>
+                  <p class="mt-1 text-on-surface-variant text-body-md">
+                    {experience.summary}
+                  </p>
+                  <div class="flex flex-wrap gap-2 mt-5">
+                    {#each experience.skills as skill}
+                      <span class="font-label-caps text-label-caps text-xs text-white px-2.5 py-1 rounded-md border border-primary/20 bg-primary/10">
+                        {skill}
+                      </span>
+                    {/each}
+                  </div>
+                </div>
+              </div>
+
+              <div class="lg:min-w-48 lg:text-right">
+                <p class="font-mono text-xs text-white">{experience.period}</p>
+                <p class="mt-1 text-sm text-on-surface-variant">
+                  {experience.duration ?? mahakaryaDuration}
+                </p>
+                <p class="mt-4 text-sm text-on-surface-variant">{experience.location}</p>
+              </div>
+            </div>
+            </article>
+          {/each}
+        </div>
+      </div>
     </div>
   </section>
 

@@ -3,7 +3,7 @@
 	let mobileMenuOpen = $state(false);
 	let activeSection = $state('home');
 
-	const sections = ['home', 'about', 'stack', 'projects', 'contact'];
+	const sections = ['home', 'about', 'experience', 'stack', 'projects', 'contact'];
 
 	$effect(() => {
 		const handleScroll = () => {
@@ -43,7 +43,7 @@
 			<img src="/images/logo.svg" alt="SULTONI.DEV Logo" class="w-20 h-auto" />
 		</a>    
 		<div class="hidden md:flex items-center space-x-8">
-			{#each ['home', 'about', 'stack', 'projects'] as section}
+			{#each ['home', 'about', 'experience', 'stack', 'projects'] as section}
 				<a 
 					class="nav-link text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 pb-1 font-label-caps text-[18px] leading-tight {activeSection === section ? 'active' : ''}"
 					data-section={section}
@@ -89,7 +89,7 @@
 		</div>
 
 		<div class="px-6 py-5 space-y-3">
-			{#each ['home', 'about', 'stack', 'projects'] as section}
+			{#each ['home', 'about', 'experience', 'stack', 'projects'] as section}
 				<a 
 					class="nav-link-mobile block py-2.5 text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 {activeSection === section ? 'active' : ''}"
 					href={`#${section}`}
