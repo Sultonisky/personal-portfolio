@@ -6,16 +6,14 @@
   import Typewriter from "$lib/components/Typewriter.svelte";
   import { socialLinks } from "$lib/social-links";
 
-  type GridItem =
-    | { type: "stack"; name: string; img: string; level: number; white?: boolean }
-    | { type: "filler"; level: number };
+  type StackItem = { name: string; img: string; level: number; white?: boolean };
 
   const typewriterTexts = [
-    "I'm an Information Systems student from Indonesia and a UX-first full-stack developer. I build web apps that feel intuitive on the surface and stay dependable underneath.",
-    "From user flows and accessible interfaces to APIs and data models, I like breaking complex problems down and rebuilding them as simple, maintainable systems.",
+    "I'm an Information Systems student from Indonesia, drawn to the moment an idea becomes something useful. When someone shares a frustration, I like listening for the real need and finding a thoughtful way to make things easier. Sometimes that means building a web app, sometimes a simpler solution is better. Either way, knowing my work helped someone or made their day a little brighter is what makes me happy.",
+    "That curiosity has taken me from local experiments to deploying projects and learning what it takes to keep them running. I especially enjoy exploring PHP and Laravel, and I'm growing toward full-stack development. As AI becomes part of my workflow, I hope to become an AI orchestrator not just someone who uses AI, but someone who can eventually build AI-powered tools of my own, guided by human judgment and care. Away from code, I take my sport bike out, less for the destination than for the new things I notice along the way.",
   ];
 
-  const productionStack = [
+  const productionStack: StackItem[] = [
     { name: "Laravel", img: "/images/stacks/laravel.svg", level: 4 },
     { name: "PHP", img: "/images/stacks/php.svg", level: 4 },
     { name: "Python", img: "/images/stacks/python.svg", level: 4 },
@@ -32,7 +30,7 @@
     { name: "Bootstrap", img: "/images/stacks/bootstrap.svg", level: 3 },
   ];
 
-  const exploringStack = [
+  const exploringStack: StackItem[] = [
     { name: "TypeScript", img: "/images/stacks/ts.svg", level: 3 },
     { name: "Turborepo", img: "/images/stacks/turborepo.svg", level: 2 },
     { name: "NestJS", img: "/images/stacks/nestjs.svg", level: 2 },
@@ -40,38 +38,30 @@
     { name: "Prisma", img: "/images/stacks/prisma.svg", level: 2 },
     { name: "PostgreSQL", img: "/images/stacks/postgres.svg", level: 2 },
     { name: "Node.js", img: "/images/stacks/nodejs.svg", level: 3 },
-    { name: "Markdown", img: "/images/stacks/markdown.svg", level: 2 },
     { name: "Windmill", img: "/images/stacks/windmill.svg", level: 1 },
   ];
 
-  const tools = [
+  const tools: StackItem[] = [
     { name: "Git", img: "/images/stacks/git.svg", level: 3 },
     { name: "GitHub", img: "/images/stacks/github.svg", level: 4 },
-    { name: "VSCode", img: "/images/stacks/vscode.svg", level: 4 },
     { name: "Postman", img: "/images/stacks/postman.svg", level: 3 },
     { name: "Docker", img: "/images/stacks/docker.svg", level: 2 },
     { name: "Railway", img: "/images/stacks/railway.svg", level: 2 },
     { name: "Vercel", img: "/images/stacks/vercel.svg", level: 2 },
-    { name: "Odoo", img: "/images/stacks/odoo.svg", level: 2 },
-    { name: "TablePlus", img: "/images/stacks/tableplus.svg", level: 2 },
-    { name: "Laragon", img: "/images/stacks/laragon.svg", level: 3 },
   ];
 
-  const additionalStack = [
+  const additionalStack: StackItem[] = [
     { name: "Alpine.js", img: "/images/stacks/alpinejs.svg", level: 2, white: true },
     { name: "Dart", img: "/images/stacks/dart-mono.svg", level: 2, white: true },
     { name: "Express.js", img: "/images/stacks/expressdotjs.svg", level: 2, white: true },
     { name: "FastAPI", img: "/images/stacks/fastapi.svg", level: 2, white: true },
     { name: "Flutter", img: "/images/stacks/flutter-mono.svg", level: 2, white: true },
-    { name: "MongoDB", img: "/images/stacks/mongodb.svg", level: 2, white: true },
     { name: "Nuxt", img: "/images/stacks/nuxt.svg", level: 2, white: true },
     { name: "Pinia", img: "/images/stacks/pinia-mono.svg", level: 2, white: true },
     { name: "Redis", img: "/images/stacks/redis.svg", level: 2, white: true },
     { name: "Sass", img: "/images/stacks/sass.svg", level: 2, white: true },
     { name: "SQLite", img: "/images/stacks/sqlite-mono.svg", level: 2, white: true },
     { name: "Supabase", img: "/images/stacks/supabase-mono.svg", level: 2, white: true },
-    { name: "Vite", img: "/images/stacks/vite.svg", level: 2, white: true },
-    { name: "Vitest", img: "/images/stacks/vitest.svg", level: 2, white: true },
     { name: "Vue.js", img: "/images/stacks/vuedotjs.svg", level: 2, white: true },
     { name: "Figma", img: "/images/stacks/figma-mono.svg", level: 2, white: true },
     { name: "GitHub Actions", img: "/images/stacks/github-actions.svg", level: 2, white: true },
@@ -79,79 +69,191 @@
     { name: "pnpm", img: "/images/stacks/pnpm-mono.svg", level: 2, white: true },
     { name: "Google Cloud", img: "/images/stacks/googlecloud-mono.svg", level: 2, white: true },
     { name: "GCP API", img: "/images/stacks/gcp-api.svg", level: 2, white: true },
-    { name: "SVG", img: "/images/stacks/svg-mono.svg", level: 2, white: true },
     { name: "Composer", img: "/images/stacks/composer-mono.svg", level: 2, white: true },
   ];
 
-  // Combine all items for contribution grid
-  const allStackItems: GridItem[] = [
-    ...productionStack,
-    ...exploringStack,
-    ...tools,
-    ...additionalStack,
-  ].map(
-    (item) => ({ ...item, type: "stack" as const }),
-  );
-
-  // Fixed filler cells pattern - 9 cells to make 40 total (31 stack + 9 filler), alternating levels for visual consistency
-  const fillerCells: GridItem[] = Array.from({ length: 9 }, (_, i) => ({
-    type: "filler",
-    level: i % 2, // deterministic: alternates 0,1,0,1...
-  }));
-
-  // Place fillers at the end for consistent layout
-  const gridItems = [...allStackItems, ...fillerCells];
-
+  const inventoryGroups: {
+    name: string;
+    icon: string;
+    items: StackItem[];
+    minCells: number;
+  }[] = [
+    {
+      name: "Languages & Frameworks",
+      icon: "code",
+      minCells: 40,
+      items: [
+        ...productionStack.filter(({ name }) =>
+          ["Laravel", "PHP", "Python", "HTML", "CSS", "JavaScript"].includes(name),
+        ),
+        ...exploringStack.filter(({ name }) =>
+          ["TypeScript", "NestJS", "SvelteKit", "Node.js"].includes(name),
+        ),
+        ...additionalStack.filter(({ name }) =>
+          [
+            "Alpine.js",
+            "Dart",
+            "Express.js",
+            "FastAPI",
+            "Flutter",
+            "Nuxt",
+            "Sass",
+            "Vue.js",
+          ].includes(name),
+        ),
+        ...productionStack.filter(({ name }) =>
+          ["Tailwind CSS", "Google Apps Script", "Bootstrap"].includes(name),
+        ),
+      ],
+    },
+    {
+      name: "Databases & Data",
+      icon: "database",
+      minCells: 20,
+      items: [
+        ...productionStack.filter(({ name }) => name === "MySQL"),
+        ...exploringStack.filter(({ name }) => ["Prisma", "PostgreSQL"].includes(name)),
+        ...additionalStack.filter(({ name }) =>
+          ["Redis", "SQLite", "Supabase"].includes(name),
+        ),
+      ],
+    },
+    {
+      name: "Tools & Workflow",
+      icon: "build",
+      minCells: 20,
+      items: [
+        ...tools,
+        ...additionalStack.filter(({ name }) =>
+          [
+            "Figma",
+            "GitHub Actions",
+            "Google Cloud",
+            "GCP API",
+            "Pinia",
+            "npm",
+            "pnpm",
+            "Composer",
+          ].includes(name),
+        ),
+        ...exploringStack.filter(({ name }) => ["Turborepo", "Windmill"].includes(name)),
+      ],
+    },
+  ];
   const personalProjects = [
     {
       name: "CTRL Agent",
       img: "/images/projects/CTRLBuild-White.png",
       link: null,
-      desc: "A terminal-first AI coding agent with a full TUI. It connects to your LLM of choice and provides tools for shell access, file editing, LSP diagnostics, web fetch, and code search so you can work through engineering tasks while staying in control.",
-      tags: ["OpenCode", "Go", "Python"],
+      active: false,
+      type: "Developer Tool",
+      desc: "A terminal-first AI coding agent designed to keep developers in control. It combines a full-screen TUI with shell access, file editing, LSP diagnostics, web fetching, and code search in one focused workflow.",
+      workflow: [
+        { label: "Request", icon: "chat", detail: "Define the task" },
+        { label: "Inspect", icon: "search", detail: "Explore the context" },
+        { label: "Plan", icon: "route", detail: "Choose an approach" },
+        { label: "Execute", icon: "edit_note", detail: "Apply the work" },
+        { label: "Verify", icon: "task_alt", detail: "Review the output" },
+      ],
+      tags: ["Go", "Python", "AI Tooling"],
     },
     {
       name: "Scroll",
       img: "/images/projects/logo-scroll.png",
       link: "https://github.com/Sultonisky/Scroll",
-      desc: "Self-hosted payroll management for remote-first companies.",
-      tags: ["Laravel", "PHP", "CoreUI", "MySQL"],
+      type: "Web Application",
+      desc: "A self-hosted payroll platform for remote-first teams. It brings employee records, payroll operations, and recurring administrative workflows into a single private workspace.",
+      workflow: [
+        { label: "Input", icon: "edit_note", detail: "Prepare payroll data" },
+        { label: "Review", icon: "fact_check", detail: "Check the records" },
+        { label: "Approve", icon: "task_alt", detail: "Confirm the run" },
+        { label: "Pay", icon: "account_balance", detail: "Complete the payment" },
+      ],
+      tags: ["Laravel", "PHP", "JavaScript", "MySQL", "SQLite", "Bootstrap"],
     },
     {
       name: "CTRL Build",
       img: "/images/projects/CTRLBuild-White.png",
       link: "https://www.ctrl-build.my.id/",
-      desc: "This is a modern web application built with React, Vite, and Three.js. It features interactive WebGL particle text systems, fluid cursor effects, and high-performance animations using Lenis scroll.",
+      active: false,
+      type: "Interactive Website",
+      desc: "An experimental interactive landing page focused on immersive motion and WebGL. It combines particle-based typography, fluid cursor interactions, and smooth scrolling into a responsive visual experience.",
+      workflow: [
+        { label: "Input", icon: "lightbulb", detail: "Set the visual direction" },
+        { label: "Build", icon: "layers", detail: "Compose the experience" },
+        { label: "Interact", icon: "motion_mode", detail: "Connect user actions" },
+        { label: "Polish", icon: "tune", detail: "Refine the experience" },
+      ],
       tags: ["React", "Vite", "Three.js", "Lenis"],
     },
     {
       name: "Slogy",
-      img: null,
+      img: "/images/projects/slogy-logo-r.png",
       link: "https://github.com/Sultonisky/Slogy",
-      desc: "Laravel activity logging with SHA-256 tamper detection and log verification tools.",
-      tags: ["Laravel", "PHP", "Composer"],
+      type: "Developer Package",
+      desc: "A Laravel activity-logging package built for traceability and tamper awareness. It records application events, adds SHA-256 integrity checks, and provides tools for verifying log history.",
+      workflow: [
+        { label: "Capture", icon: "event_note", detail: "Record activity" },
+        { label: "Hash", icon: "fingerprint", detail: "Protect the entry" },
+        { label: "Chain", icon: "link", detail: "Relate the history" },
+        { label: "Verify", icon: "verified", detail: "Check the integrity" },
+      ],
+      tags: ["Laravel", "PHP", "Composer", "SQLite"],
+    },
+    {
+      name: "Rasanesia",
+      img: "/images/projects/rasanesia.png",
+      link: "https://github.com/Sultonisky/Rasanesia.git",
+      type: "Web Application",
+      desc: "A recipe-sharing platform for discovering, creating, and managing Indonesian recipes. It combines public recipe browsing with authentication, reviews and ratings, favorites, PDF export, and an admin dashboard for content management.",
+      workflow: [
+        { label: "Discover", icon: "search", detail: "Browse Indonesian recipes" },
+        { label: "Create", icon: "edit_note", detail: "Share a recipe" },
+        { label: "Review", icon: "star", detail: "Rate and discuss recipes" },
+        { label: "Save", icon: "favorite", detail: "Keep favorite recipes" },
+        { label: "Manage", icon: "admin_panel_settings", detail: "Control platform content" },
+      ],
+      tags: ["Laravel", "PHP", "JavaScript", "MySQL", "Bootstrap", "GCP", "GCP API"],
     },
     {
       name: "E-KTM Mobile",
       img: "/images/projects/logo_ketupat.png",
-      link: null,
-      desc: "A comprehensive tuition payment management system for Bina Sarana Informatika University (UBSI). This system enables students to make tuition payments online using various payment methods integrated with the Midtrans payment gateway.",
+      link: "https://github.com/Sultonisky/ektm-project-monorepo",
+      type: "Mobile Application",
+      desc: "A mobile tuition-payment platform for Bina Sarana Informatika University (UBSI). It guides students through payment selection and checkout while connecting transaction processing to Midtrans.",
+      workflow: [
+        { label: "Select", icon: "receipt_long", detail: "Choose a bill" },
+        { label: "Checkout", icon: "shopping_cart", detail: "Start the payment" },
+        { label: "Process", icon: "payments", detail: "Handle the transaction" },
+        { label: "Callback", icon: "sync", detail: "Receive the update" },
+        { label: "Confirm", icon: "task_alt", detail: "Show the result" },
+      ],
       tags: [
         "React Native",
         "NestJS",
+        "SvelteKit",
         "TypeScript",
         "Prisma",
         "PNPM",
         "Turborepo",
         "Midtrans",
+        "PostgreSQL",
       ],
     },
     {
       name: "Bookingin",
       img: "/images/projects/logo-putih.png",
-      link: null,
-      desc: "Bookingin is a hotel reservation platform built with Laravel 10, MySQL, HTML, CSS, JavaScript, and Bootstrap 5, featuring a frontend for users and a backend for admins. It integrates the Midtrans Payment Gateway with webhook callbacks and email notifications to ensure smooth and secure booking confirmations.",
-      tags: ["Laravel", "MySQL", "Bootstrap", "Midtrans"],
+      link: "https://github.com/Sultonisky/Project-Laravel-Hotel-Bookingin",
+      type: "Web Application",
+      desc: "A hotel reservation platform with separate guest and admin experiences. It supports room booking, Midtrans payments, webhook-based confirmation, and email notifications from reservation to completion.",
+      workflow: [
+        { label: "Search", icon: "search", detail: "Find a room" },
+        { label: "Reserve", icon: "event_available", detail: "Create a booking" },
+        { label: "Pay", icon: "payments", detail: "Complete the payment" },
+        { label: "Callback", icon: "sync", detail: "Confirm the transaction" },
+        { label: "Notify", icon: "mail", detail: "Send confirmation" },
+      ],
+      tags: ["Laravel", "PHP", "JavaScript", "MySQL", "Bootstrap", "Midtrans"],
     },
   ];
 
@@ -160,21 +262,81 @@
       name: "Job Portal | Anagata Executive",
       img: "/images/projects/anagata-white.png",
       link: "https://anagataexecutive.co.id/",
-      desc: "Anagata Executive is a modern, data-driven Human Resources Recruitment Agency platform built with Laravel. We specialize in connecting exceptional talent with remarkable opportunities through cutting-edge technology, data-driven insights, and human expertise.",
-      tags: ["Laravel", "MySQL", "PHP"],
+      type: "Client Platform",
+      desc: "A recruitment platform for Anagata Executive that helps connect candidates with relevant opportunities. The experience presents job listings and company information through a clear, content-focused interface.",
+      workflow: [
+        { label: "Publish", icon: "post_add", detail: "Share opportunities" },
+        { label: "Discover", icon: "search", detail: "Browse available roles" },
+        { label: "Match", icon: "handshake", detail: "Connect candidates" },
+        { label: "Apply", icon: "send", detail: "Start an application" },
+      ],
+      tags: ["Laravel", "PHP", "JavaScript", "MySQL", "Tailwind", "Bootstrap"],
     },
     {
       name: "Titip Kebaikan",
       img: "/images/projects/logo-tb.png",
       link: null,
-      desc: "Titip Kebaikan for Yayasan At-Tarbiyah Pintu Air is a comprehensive web-based platform designed for foundation management. It streamlines donation processing, program management, and financial reporting to ensure transparency and efficiency in charitable operations.",
-      tags: ["Laravel", "MySQL", "Tailwind", "Bootstrap", "Midtrans"],
+      type: "Client Platform",
+      desc: "A foundation-management platform for Yayasan At-Tarbiyah Pintu Air. It supports donation processing, program administration, and financial reporting to make charitable operations easier to manage and review.",
+      workflow: [
+        { label: "Donate", icon: "volunteer_activism", detail: "Receive a donation" },
+        { label: "Manage", icon: "folder_managed", detail: "Organize programs" },
+        { label: "Record", icon: "receipt_long", detail: "Track the activity" },
+        { label: "Report", icon: "analytics", detail: "Review the impact" },
+      ],
+      tags: ["Laravel", "PHP", "JavaScript", "MySQL", "Tailwind", "Bootstrap", "Supabase", "Midtrans"],
+    },
+    {
+      name: "The Days Coffee",
+      img: "/images/projects/dedyass.png",
+      link: null,
+      type: "Client Website",
+      desc: "A simple and responsive coffee shop website. Users can place orders through a complete order form that automatically redirects to WhatsApp with their full order details for easy communication.",
+      workflow: [
+        { label: "Browse", icon: "coffee", detail: "Explore the menu" },
+        { label: "Order", icon: "shopping_cart", detail: "Complete the order form" },
+        { label: "Review", icon: "fact_check", detail: "Check the order details" },
+        { label: "WhatsApp", icon: "send", detail: "Send the order directly" },
+      ],
+      tags: ["HTML", "CSS", "JavaScript", "Alpine.js"],
     },
   ];
 
+  const stackIconMap: Record<string, string> = {
+    Bootstrap: "/images/stacks/bootstrap.svg",
+    "Alpine.js": "/images/stacks/alpinejs.svg",
+    Composer: "/images/stacks/composer-mono.svg",
+    CSS: "/images/stacks/css.svg",
+    GitHub: "/images/stacks/github.svg",
+    HTML: "/images/stacks/html.svg",
+    JavaScript: "/images/stacks/javascript.svg",
+    Laravel: "/images/stacks/laravel.svg",
+    Midtrans: "/images/stacks/midtrans.svg",
+    MySQL: "/images/stacks/mysql.svg",
+    NestJS: "/images/stacks/nestjs.svg",
+    PHP: "/images/stacks/php.svg",
+    PNPM: "/images/stacks/pnpm-mono.svg",
+    PostgreSQL: "/images/stacks/postgres.svg",
+    Prisma: "/images/stacks/prisma.svg",
+    Python: "/images/stacks/python.svg",
+    "React Native": "/images/stacks/react-native.svg",
+    SQLite: "/images/stacks/sqlite-mono.svg",
+    Supabase: "/images/stacks/supabase-mono.svg",
+    SvelteKit: "/images/stacks/sveltekit.svg",
+    Tailwind: "/images/stacks/tailwind.svg",
+    "TypeScript": "/images/stacks/ts.svg",
+    Turborepo: "/images/stacks/turborepo.svg",
+    Vite: "/images/stacks/vite.svg",
+    "GCP API": "/images/stacks/gcp-api.svg",
+    "GCP": "/images/stacks/googlecloud-mono.svg",
+  };
+
+  const activePersonalProjects = personalProjects.filter(({ active = true }) => active);
   const featuredProjects = personalProjects
     .filter(({ name }) => name === "Slogy" || name === "Scroll")
     .reverse();
+  let personalProjectIndex = $state(0);
+  let clientProjectIndex = $state(0);
   let featuredProjectIndex = $state(0);
   let featuredProject = $derived(featuredProjects[featuredProjectIndex]);
   let featuredPointerStartX = 0;
@@ -191,6 +353,14 @@
   function showFeaturedProject(index: number) {
     featuredProjectIndex = (index + featuredProjects.length) % featuredProjects.length;
     scheduleFeaturedProjectRotation();
+  }
+
+  function showPersonalProject(index: number) {
+    personalProjectIndex = (index + activePersonalProjects.length) % activePersonalProjects.length;
+  }
+
+  function showClientProject(index: number) {
+    clientProjectIndex = (index + clientProjects.length) % clientProjects.length;
   }
 
   onMount(() => {
@@ -277,30 +447,6 @@
     }
   }
 
-  let dragStartX = 0;
-  let dragScrollLeft = 0;
-
-  function startProjectDrag(e: PointerEvent) {
-    const container = e.currentTarget as HTMLElement;
-    dragStartX = e.clientX;
-    dragScrollLeft = container.scrollLeft;
-    container.classList.add("is-dragging");
-    container.setPointerCapture(e.pointerId);
-  }
-
-  function moveProjectDrag(e: PointerEvent) {
-    const container = e.currentTarget as HTMLElement;
-    if (!container.classList.contains("is-dragging")) return;
-    container.scrollLeft = dragScrollLeft - (e.clientX - dragStartX);
-  }
-
-  function endProjectDrag(e: PointerEvent) {
-    const container = e.currentTarget as HTMLElement;
-    container.classList.remove("is-dragging");
-    if (container.hasPointerCapture(e.pointerId)) {
-      container.releasePointerCapture(e.pointerId);
-    }
-  }
 </script>
 
 <Navbar />
@@ -382,13 +528,14 @@
         </h1>
 
         <p
-          class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl text-pretty leading-relaxed mb-8"
+          class="font-body-lg text-body-lg text-on-surface-variant text-pretty leading-relaxed mb-8"
         >
-          A <span class="text-primary font-semibold"
-            >UX-first Full-Stack Developer</span
-          > based in Indonesia. I build intuitive web experiences and dependable
-          systems, working primarily with Laravel &amp; PHP across accessible
-          interfaces, APIs, and data layers.
+          Informatics and
+          <span class="text-primary font-semibold">UX-first Full-Stack Developer</span>
+          based in Indonesia. I start by understanding what people need and finding
+          the simplest way to help. When software is the right fit, I build intuitive
+          experiences and dependable systems, working primarily with Laravel &amp;
+          PHP across accessible interfaces, APIs, and data layers.
         </p>
 
         <div class="flex flex-wrap items-center gap-3">
@@ -429,15 +576,6 @@
             aria-label="GitHub"
           >
             <img alt="" class="w-5 h-auto" src="/images/stacks/github.svg" />
-          </a>
-          <a
-            class="flex items-center justify-center w-10 h-10 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/60 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
-            href={socialLinks.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Instagram"
-          >
-            <span class="material-symbols-outlined text-xl">photo_camera</span>
           </a>
         </div>
       </div>
@@ -734,7 +872,7 @@
         <div
           class="absolute top-0 left-0 w-full h-1 opacity-70"
         ></div>
-        <div class="flex items-center justify-between gap-3 mb-6">
+        <div class="flex items-center justify-between gap-3 mb-6 border-b border-[#333F43]/40 pb-4">
           <span class="material-symbols-outlined text-primary">deployed_code</span>
           <div class="flex flex-1 items-center justify-between gap-3 min-w-0">
             <h3 class="font-body-lg text-body-lg text-on-background font-semibold">
@@ -748,15 +886,23 @@
         <ul class="flex flex-1 flex-col justify-between gap-4 text-on-surface-variant text-body-md leading-relaxed">
           <li class="flex items-start gap-3">
             <span class="material-symbols-outlined text-primary text-lg mt-0.5">check_circle</span>
-            <span>Full-stack web applications with clean, responsive interfaces</span>
+            <span>Turn real needs into intuitive, accessible digital experiences</span>
           </li>
           <li class="flex items-start gap-3">
             <span class="material-symbols-outlined text-primary text-lg mt-0.5">check_circle</span>
-            <span>Backend systems and REST APIs backed by reliable data layers</span>
+            <span>Build full-stack apps with clean, responsive interfaces</span>
           </li>
           <li class="flex items-start gap-3">
             <span class="material-symbols-outlined text-primary text-lg mt-0.5">check_circle</span>
-            <span>Internal business tools, management systems, and automation</span>
+            <span>Create dependable backends, REST APIs, and data layers</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary text-lg mt-0.5">check_circle</span>
+            <span>Make internal tools and automation that simplify everyday work</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary text-lg mt-0.5">check_circle</span>
+            <span>Choose software when it is the right solution for the need</span>
           </li>
         </ul>
       </article>
@@ -773,7 +919,7 @@
         <div
           class="absolute top-0 left-0 w-full h-1"
         ></div>
-        <div class="flex items-center justify-between gap-3 mb-6">
+        <div class="flex items-center justify-between gap-3 mb-6 border-b border-[#333F43]/40 pb-4">
           <span class="material-symbols-outlined text-primary">conversion_path</span>
           <div class="flex flex-1 items-center justify-between gap-3 min-w-0">
             <h3 class="font-body-lg text-body-lg text-on-background font-semibold">
@@ -787,19 +933,23 @@
         <ol class="flex flex-1 flex-col justify-between gap-3 text-on-surface-variant text-body-md leading-relaxed">
           <li class="flex items-center gap-3">
             <span class="font-mono text-xs text-primary bg-primary/10 border border-primary/20 rounded-md px-2 py-1">01</span>
-            <span>Understand the user and the problem</span>
+            <span>Listen closely and understand the real need</span>
           </li>
           <li class="flex items-center gap-3">
             <span class="font-mono text-xs text-primary bg-primary/10 border border-primary/20 rounded-md px-2 py-1">02</span>
-            <span>Design a clear, accessible experience</span>
+            <span>Explore options and choose the simplest effective solution</span>
           </li>
           <li class="flex items-center gap-3">
             <span class="font-mono text-xs text-primary bg-primary/10 border border-primary/20 rounded-md px-2 py-1">03</span>
-            <span>Build and test the system end to end</span>
+            <span>Shape a clear, accessible experience around the user</span>
           </li>
           <li class="flex items-center gap-3">
             <span class="font-mono text-xs text-primary bg-primary/10 border border-primary/20 rounded-md px-2 py-1">04</span>
-            <span>Improve it through feedback and iteration</span>
+            <span>Build and test for usability and reliability</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="font-mono text-xs text-primary bg-primary/10 border border-primary/20 rounded-md px-2 py-1">05</span>
+            <span>Learn from feedback and keep improving</span>
           </li>
         </ol>
       </article>
@@ -869,42 +1019,55 @@
     </div>
 
     <div class="mb-12 relative z-10">
-      <h2 class="font-headline-md text-headline-md text-on-background mb-2">
-        Technical Inventory
-      </h2>
       <p
-        class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest"
+        class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-2"
       >
-        Current Stack & Explorations
+        Technical Inventory
+      </p>
+      <h2 class="font-headline-md text-headline-md text-on-background mb-2">
+        Stack & Explorations
+      </h2>
+      <p class="text-on-surface-variant text-body-md">
+        The technologies, tools, and platforms I use and continue to explore.
       </p>
     </div>
     <div class="glass rounded-2xl p-6 md:p-8 relative z-10 shadow-xl">
-      <div class="contribution-grid">
-        {#each gridItems as item, i}
-          {#if item.type === "filler"}
-            <div
-              class="contribution-cell contribution-level-{item.level}"
-              title="Filler"
-            ></div>
-          {:else}
-            <div
-              class="contribution-cell contribution-level-{item.level} cursor-pointer group relative contribution-animate contribution-animate-delay-{i %
-                8}"
-              title={item.name}
-            >
-              <img
-                alt={item.name}
-                class="w-7 h-7 object-contain opacity-70 group-hover:opacity-100 {item.white ? 'stack-icon-white' : ''}"
-                src={item.img}
-              />
-              <!-- Tooltip -->
-              <div
-                class="absolute -top-12 left-1/2 -translate-x-1/2 bg-[#13181A] border border-[#333F43] rounded px-3 py-1.5 text-xs font-label-caps text-on-background opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20 before:content-[''] before:absolute before:top-full before:left-1/2 before:-translate-x-1/2 before:border-4 before:border-transparent before:border-t-[#333F43]"
-              >
-                {item.name}
-              </div>
+      <div class="inventory-category-grid">
+        {#each inventoryGroups as group, i}
+          <div
+            class="inventory-category glass rounded-xl border border-[#333F43]/50 p-4 md:p-5"
+            style={`--inventory-column-span: ${i === 0 ? "1 / -1" : "auto"}; --inventory-grid-columns: ${i === 0 ? 20 : 10};`}
+          >
+            <div class="flex items-center gap-2.5 mb-4 border-b border-[#333F43]/40 pb-3">
+              <span class="material-symbols-outlined text-primary">{group.icon}</span>
+              <h3 class="font-label-caps text-label-caps text-on-background">{group.name}</h3>
             </div>
-          {/if}
+            <div class="contribution-grid">
+              {#each group.items as item, i}
+                <button
+                  class="contribution-cell contribution-level-{item.level} cursor-pointer group relative"
+                  aria-label={item.name}
+                  title={item.name}
+                  type="button"
+                >
+                  <img
+                    alt={item.name}
+                    class="w-7 h-7 object-contain opacity-60 group-hover:opacity-85 {item.white ? 'stack-icon-white' : ''}"
+                    src={item.img}
+                  />
+                  <div
+                    class="inventory-tooltip inventory-tooltip-hover absolute -top-12 left-1/2 -translate-x-1/2 bg-[#13181A] border border-[#333F43] rounded px-3 py-1.5 text-xs font-label-caps text-on-background opacity-0 pointer-events-none whitespace-nowrap z-20 before:content-[''] before:absolute before:top-full before:left-1/2 before:-translate-x-1/2 before:border-4 before:border-transparent before:border-t-[#333F43]"
+                    aria-hidden="true"
+                  >
+                    {item.name}
+                  </div>
+                </button>
+              {/each}
+              {#each Array.from({ length: Math.max(0, group.minCells - group.items.length) }) as _}
+                <div class="contribution-cell contribution-level-0 inventory-empty-cell" aria-hidden="true"></div>
+              {/each}
+            </div>
+          </div>
         {/each}
       </div>
 
@@ -925,6 +1088,10 @@
           >More</span
         >
       </div>
+
+      <p class="inventory-hint mt-4 text-left font-label-caps text-xs text-on-surface-variant">
+        Hover or tap an item to see the details.
+      </p>
     </div>
   </section>
 
@@ -987,13 +1154,16 @@
 
     <div class="relative z-10">
       <div class="mb-12">
-        <h2 class="font-headline-md text-headline-md text-on-background mb-2">
-          Project Portfolio
-        </h2>
         <p
-          class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest"
+          class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-2"
         >
-          Personal & Client Work
+          Project Portfolio
+        </p>
+        <h2 class="font-headline-md text-headline-md text-on-background mb-2">
+          Selected Work
+        </h2>
+        <p class="text-on-surface-variant text-body-md">
+          A selection of personal projects and client work I have built.
         </p>
       </div>
 
@@ -1013,60 +1183,37 @@
           class="project-marquee"
           role="region"
           aria-label="Personal projects"
-          onpointerdown={startProjectDrag}
-          onpointermove={moveProjectDrag}
-          onpointerup={endProjectDrag}
-          onpointercancel={endProjectDrag}
         >
         <div class="project-track">
           <div class="project-track-group">
-        {#each personalProjects as item, i}
+        {#each activePersonalProjects as item, i}
+          {#if i === personalProjectIndex}
           <div
-            class="project-card group relative overflow-hidden rounded-2xl border border-[#333F43]/60 bg-[#1D2427]/70 backdrop-blur-md transition-all duration-300 hover:border-primary/50 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/10"
+            class="project-card group relative overflow-hidden rounded-2xl"
           >
-            <!-- Top accent line on hover -->
-            <div
-              class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-primary via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            ></div>
-            <div class="project-card-grid"></div>
-
-            <!-- Watermark index -->
-            <div
-              class="absolute -right-2 -top-6 text-[80px] leading-none font-bold text-primary/5 select-none pointer-events-none"
-            >
-              {String(i + 1).padStart(2, "0")}
-            </div>
-
             <div class="p-6 flex flex-col gap-6 relative z-10 min-h-full">
-              <div class="project-card-meta">
-                <span class="project-card-status">
-                  <span class="project-card-status-dot"></span>
-                  SYSTEM ONLINE
-                </span>
-                <span class="font-mono text-[10px] text-on-surface-variant/60"
-                  >PRJ-{String(i + 1).padStart(2, "0")}</span
-                >
-              </div>
               <div class="flex justify-between items-start gap-4">
-                <div class="relative">
-                  <div
-                    class="absolute inset-0 bg-primary/25 blur-xl rounded-full"
-                  ></div>
-                  <div
-                    class="relative bg-[#13181A]/90 border border-[#333F43]/70 p-3 rounded-xl group-hover:border-primary/50 group-hover:scale-105 transition-all duration-300"
-                  >
-                    {#if item.img}
-                      <img
-                        alt={item.name}
-                        class="w-9 h-auto object-contain"
-                        src={item.img}
-                      />
-                    {:else}
-                      <span
-                        class="material-symbols-outlined text-primary text-2xl"
-                        >schedule</span
-                      >
-                    {/if}
+                <div class="flex items-center gap-4 min-w-0">
+                  <div class="relative shrink-0">
+                    <div
+                      class="relative border border-[#333F43]/70 p-3 rounded-xl group-hover:border-primary/50 group-hover:scale-105 transition-all duration-300"
+                    >
+                      {#if item.img}
+                        <img
+                          alt={item.name}
+                          class="w-9 h-auto object-contain"
+                          src={item.img}
+                        />
+                      {:else}
+                        <span class="material-symbols-outlined text-primary text-2xl">schedule</span>
+                      {/if}
+                    </div>
+                  </div>
+                  <div class="min-w-0">
+                    <h3 class="font-body-lg text-body-lg text-on-background font-semibold truncate">
+                      {item.name}
+                    </h3>
+                    <p class="mt-1 text-sm text-on-surface-variant truncate">{item.type}</p>
                   </div>
                 </div>
                 {#if item.link}
@@ -1093,16 +1240,6 @@
               </div>
 
               <div class="flex flex-col gap-3">
-                <div class="flex items-baseline gap-2">
-                  <span class="font-mono text-xs text-primary/70"
-                    >{"0" + (i + 1)}/</span
-                  >
-                  <h3
-                    class="font-body-lg text-body-lg text-on-background font-semibold group-hover:text-primary transition-colors duration-300"
-                  >
-                    {item.name}
-                  </h3>
-                </div>
                 <p
                   class="text-on-surface-variant text-body-md leading-relaxed line-clamp-4"
                 >
@@ -1110,30 +1247,53 @@
                 </p>
               </div>
 
+              <div class="workflow-run rounded-xl border border-[#333F43]/60 p-4">
+                <div class="flex items-center gap-2 border-b border-[#333F43]/50 pb-3">
+                  <span class="material-symbols-outlined text-primary text-base">account_tree</span>
+                  <span class="font-mono text-[10px] text-on-surface-variant">SYSTEM FLOW</span>
+                </div>
+                <div class="workflow-run-steps">
+                  {#each item.workflow as step, stepIndex}
+                    <div class="workflow-run-step">
+                      <div class="workflow-run-node">
+                        <span class="material-symbols-outlined text-base">{step.icon}</span>
+                      </div>
+                      <div class="min-w-0">
+                        <h4 class="font-label-caps text-label-caps text-on-background">{step.label}</h4>
+                        <p class="mt-1 text-xs text-on-surface-variant">{step.detail}</p>
+                      </div>
+                    </div>
+                    {#if stepIndex < item.workflow.length - 1}
+                      <span class="workflow-run-connector" aria-hidden="true"></span>
+                    {/if}
+                  {/each}
+                </div>
+              </div>
+
               <div class="flex flex-wrap gap-2 mt-auto pt-2">
                 {#each item.tags as tag}
-                  <span
-                    class="font-label-caps text-label-caps text-xs bg-primary/10 text-primary/90 px-2.5 py-1 rounded-md border border-primary/20 group-hover:border-primary/40 transition-colors duration-300"
-                    >{tag}</span
-                  >
+                  {@const stackIcon = stackIconMap[tag]}
+                  {@const stackIconIsWhite = tag === "PNPM" || tag === "Composer"}
+                  <span class="project-stack-tag font-label-caps text-label-caps text-xs text-white px-2.5 py-1 rounded-md border border-primary/20 group-hover:border-primary/40 transition-colors duration-300">
+                    {#if stackIcon}
+                      <img class:stack-icon-white={stackIconIsWhite} src={stackIcon} alt="" aria-hidden="true" />
+                    {/if}
+                    <span>{tag}</span>
+                  </span>
                 {/each}
               </div>
             </div>
           </div>
+          {/if}
         {/each}
           </div>
           <div class="project-track-group" aria-hidden="true">
-            {#each personalProjects as item, i}
+            {#each activePersonalProjects as item, i}
               {@const duplicateItem = item}
               <div
-                class="project-card group relative overflow-hidden rounded-2xl border border-[#333F43]/60 bg-[#1D2427]/70 backdrop-blur-md transition-all duration-300 hover:border-primary/50 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/10"
+                class="project-card group relative overflow-hidden rounded-2xl"
               >
-                <div class="project-card-grid"></div>
                 <div class="p-6 flex flex-col gap-6 relative z-10 min-h-full">
-                  <div class="project-card-meta">
-                    <span class="project-card-status"><span class="project-card-status-dot"></span> SYSTEM ONLINE</span>
-                    <span class="font-mono text-[10px] text-on-surface-variant/60">PRJ-{String(i + 1).padStart(2, "0")}</span>
-                  </div>
                   <div class="flex justify-between items-start gap-4">
                     <div class="relative">
                       <div class="absolute inset-0 bg-primary/25 blur-xl rounded-full"></div>
@@ -1151,14 +1311,20 @@
                   </div>
                   <div class="flex flex-col gap-3">
                     <div class="flex items-baseline gap-2">
-                      <span class="font-mono text-xs text-primary/70">{"0" + (i + 1)}/</span>
                       <h3 class="font-body-lg text-body-lg text-on-background font-semibold">{duplicateItem.name}</h3>
                     </div>
                     <p class="text-on-surface-variant text-body-md leading-relaxed line-clamp-4">{duplicateItem.desc}</p>
                   </div>
                   <div class="flex flex-wrap gap-2 mt-auto pt-2">
                     {#each duplicateItem.tags as tag}
-                      <span class="font-label-caps text-label-caps text-xs bg-primary/10 text-primary/90 px-2.5 py-1 rounded-md border border-primary/20">{tag}</span>
+                      {@const stackIcon = stackIconMap[tag]}
+                      {@const stackIconIsWhite = tag === "PNPM" || tag === "Composer"}
+                      <span class="project-stack-tag font-label-caps text-label-caps text-xs text-white px-2.5 py-1 rounded-md border border-primary/20">
+                        {#if stackIcon}
+                          <img class:stack-icon-white={stackIconIsWhite} src={stackIcon} alt="" aria-hidden="true" />
+                        {/if}
+                        <span>{tag}</span>
+                      </span>
                     {/each}
                   </div>
                 </div>
@@ -1166,6 +1332,17 @@
             {/each}
           </div>
         </div>
+      </div>
+      <div class="project-pagination" role="group" aria-label="Personal project pagination">
+        {#each activePersonalProjects as item, i}
+          <button
+            type="button"
+            class:active={i === personalProjectIndex}
+            aria-label={`Show personal project ${i + 1}: ${item.name}`}
+            aria-pressed={i === personalProjectIndex}
+            onclick={() => showPersonalProject(i)}
+          ></button>
+        {/each}
       </div>
 
       <!-- Client Projects -->
@@ -1184,60 +1361,37 @@
           class="project-marquee"
           role="region"
           aria-label="Client projects"
-          onpointerdown={startProjectDrag}
-          onpointermove={moveProjectDrag}
-          onpointerup={endProjectDrag}
-          onpointercancel={endProjectDrag}
         >
           <div class="project-track project-track-reverse">
             <div class="project-track-group">
           {#each clientProjects as item, i}
-            <div
-              class="project-card group relative overflow-hidden rounded-2xl border border-[#333F43]/60 bg-[#1D2427]/70 backdrop-blur-md transition-all duration-300 hover:border-primary/50 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/10"
-            >
-              <!-- Top accent line on hover -->
+              {#if i === clientProjectIndex}
               <div
-                class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-primary via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              ></div>
-              <div class="project-card-grid"></div>
-
-              <!-- Watermark index -->
-              <div
-                class="absolute -right-2 -top-6 text-[80px] leading-none font-bold text-primary/5 select-none pointer-events-none"
+                class="project-card group relative overflow-hidden rounded-2xl"
               >
-                {String(i + 1).padStart(2, "0")}
-              </div>
-
               <div class="p-6 flex flex-col gap-6 relative z-10 min-h-full">
-                <div class="project-card-meta">
-                  <span class="project-card-status">
-                    <span class="project-card-status-dot"></span>
-                    SYSTEM ONLINE
-                  </span>
-                  <span class="font-mono text-[10px] text-on-surface-variant/60"
-                    >CLIENT-{String(i + 1).padStart(2, "0")}</span
-                  >
-                </div>
                 <div class="flex justify-between items-start gap-4">
-                  <div class="relative">
-                    <div
-                      class="absolute inset-0 bg-primary/25 blur-xl rounded-full"
-                    ></div>
-                    <div
-                      class="relative bg-[#13181A]/90 border border-[#333F43]/70 p-3 rounded-xl group-hover:border-primary/50 group-hover:scale-105 transition-all duration-300"
-                    >
-                      {#if item.img}
-                        <img
-                          alt={item.name}
-                          class="w-9 h-auto object-contain"
-                          src={item.img}
-                        />
-                      {:else}
-                        <span
-                          class="material-symbols-outlined text-primary text-2xl"
-                          >apartment</span
-                        >
-                      {/if}
+                  <div class="flex items-center gap-4 min-w-0">
+                    <div class="relative shrink-0">
+                      <div
+                        class="relative border border-[#333F43]/70 p-3 rounded-xl group-hover:border-primary/50 group-hover:scale-105 transition-all duration-300"
+                      >
+                        {#if item.img}
+                          <img
+                            alt={item.name}
+                            class="w-9 h-auto object-contain"
+                            src={item.img}
+                          />
+                        {:else}
+                          <span class="material-symbols-outlined text-primary text-2xl">apartment</span>
+                        {/if}
+                      </div>
+                    </div>
+                    <div class="min-w-0">
+                      <h3 class="font-body-lg text-body-lg text-on-background font-semibold truncate">
+                        {item.name}
+                      </h3>
+                      <p class="mt-1 text-sm text-on-surface-variant truncate">{item.type}</p>
                     </div>
                   </div>
                   {#if item.link}
@@ -1264,16 +1418,6 @@
                 </div>
 
                 <div class="flex flex-col gap-3">
-                  <div class="flex items-baseline gap-2">
-                    <span class="font-mono text-xs text-primary/70"
-                      >{"0" + (i + 1)}/</span
-                    >
-                    <h3
-                      class="font-body-lg text-body-lg text-on-background font-semibold group-hover:text-primary transition-colors duration-300"
-                    >
-                      {item.name}
-                    </h3>
-                  </div>
                   <p
                     class="text-on-surface-variant text-body-md leading-relaxed line-clamp-4"
                   >
@@ -1281,29 +1425,52 @@
                   </p>
                 </div>
 
+                <div class="workflow-run rounded-xl border border-[#333F43]/60 p-4">
+                  <div class="flex items-center gap-2 border-b border-[#333F43]/50 pb-3">
+                    <span class="material-symbols-outlined text-primary text-base">account_tree</span>
+                    <span class="font-mono text-[10px] text-on-surface-variant">SYSTEM FLOW</span>
+                  </div>
+                  <div class="workflow-run-steps">
+                    {#each item.workflow as step, stepIndex}
+                      <div class="workflow-run-step">
+                        <div class="workflow-run-node">
+                          <span class="material-symbols-outlined text-base">{step.icon}</span>
+                        </div>
+                        <div class="min-w-0">
+                          <h4 class="font-label-caps text-label-caps text-on-background">{step.label}</h4>
+                          <p class="mt-1 text-xs text-on-surface-variant">{step.detail}</p>
+                        </div>
+                      </div>
+                      {#if stepIndex < item.workflow.length - 1}
+                        <span class="workflow-run-connector" aria-hidden="true"></span>
+                      {/if}
+                    {/each}
+                  </div>
+                </div>
+
                 <div class="flex flex-wrap gap-2 mt-auto pt-2">
                   {#each item.tags as tag}
-                    <span
-                      class="font-label-caps text-label-caps text-xs bg-primary/10 text-primary/90 px-2.5 py-1 rounded-md border border-primary/20 group-hover:border-primary/40 transition-colors duration-300"
-                      >{tag}</span
-                    >
+                    {@const stackIcon = stackIconMap[tag]}
+                    {@const stackIconIsWhite = tag === "PNPM" || tag === "Composer"}
+                    <span class="project-stack-tag font-label-caps text-label-caps text-xs text-white px-2.5 py-1 rounded-md border border-primary/20 group-hover:border-primary/40 transition-colors duration-300">
+                      {#if stackIcon}
+                        <img class:stack-icon-white={stackIconIsWhite} src={stackIcon} alt="" aria-hidden="true" />
+                      {/if}
+                      <span>{tag}</span>
+                    </span>
                   {/each}
                 </div>
               </div>
             </div>
+            {/if}
           {/each}
             </div>
             <div class="project-track-group" aria-hidden="true">
               {#each clientProjects as item, i}
                 <div
-                  class="project-card group relative overflow-hidden rounded-2xl border border-[#333F43]/60 bg-[#1D2427]/70 backdrop-blur-md transition-all duration-300 hover:border-primary/50 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary/10"
+                  class="project-card group relative overflow-hidden rounded-2xl"
                 >
-                  <div class="project-card-grid"></div>
                   <div class="p-6 flex flex-col gap-6 relative z-10 min-h-full">
-                    <div class="project-card-meta">
-                      <span class="project-card-status"><span class="project-card-status-dot"></span> SYSTEM ONLINE</span>
-                      <span class="font-mono text-[10px] text-on-surface-variant/60">CLIENT-{String(i + 1).padStart(2, "0")}</span>
-                    </div>
                     <div class="flex justify-between items-start gap-4">
                       <div class="relative">
                         <div class="absolute inset-0 bg-primary/25 blur-xl rounded-full"></div>
@@ -1315,16 +1482,39 @@
                           {/if}
                         </div>
                       </div>
-                      <span class="font-label-caps text-label-caps text-on-surface-variant/70">
-                        {item.link ? "View ↗" : "Details on request"}
-                      </span>
+                      {#if item.link}
+                        <a
+                          class="inline-flex items-center gap-1.5 font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors"
+                          href={item.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          View
+                          <span class="material-symbols-outlined text-base">arrow_outward</span>
+                        </a>
+                      {:else}
+                        <span class="font-label-caps text-label-caps text-on-surface-variant/70">
+                          Details on request
+                        </span>
+                      {/if}
                     </div>
                     <div class="flex flex-col gap-3">
                       <div class="flex items-baseline gap-2">
-                        <span class="font-mono text-xs text-primary/70">{"0" + (i + 1)}/</span>
                         <h3 class="font-body-lg text-body-lg text-on-background font-semibold">{item.name}</h3>
                       </div>
                       <p class="text-on-surface-variant text-body-md leading-relaxed line-clamp-4">{item.desc}</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mt-auto pt-2">
+                      {#each item.tags as tag}
+                        {@const stackIcon = stackIconMap[tag]}
+                        {@const stackIconIsWhite = tag === "PNPM" || tag === "Composer"}
+                        <span class="project-stack-tag font-label-caps text-label-caps text-xs text-white px-2.5 py-1 rounded-md border border-primary/20">
+                          {#if stackIcon}
+                            <img class:stack-icon-white={stackIconIsWhite} src={stackIcon} alt="" aria-hidden="true" />
+                          {/if}
+                          <span>{tag}</span>
+                        </span>
+                      {/each}
                     </div>
                   </div>
                 </div>
@@ -1332,6 +1522,17 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="project-pagination" role="group" aria-label="Client project pagination">
+        {#each clientProjects as item, i}
+          <button
+            type="button"
+            class:active={i === clientProjectIndex}
+            aria-label={`Show client project ${i + 1}: ${item.name}`}
+            aria-pressed={i === clientProjectIndex}
+            onclick={() => showClientProject(i)}
+          ></button>
+        {/each}
       </div>
     </div>
   </section>
@@ -1379,42 +1580,44 @@
     </div>
 
     <div class="relative z-10">
-      <div class="flex items-center gap-4 mb-10">
-        <h2
-          class="font-headline-md text-headline-md text-on-background whitespace-nowrap"
+      <div class="mb-12">
+        <p
+          class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-2"
         >
           Connection Center
+        </p>
+        <h2 class="font-headline-md text-headline-md text-on-background mb-2">
+          Let's Connect
         </h2>
+        <p class="text-on-surface-variant text-body-md">
+          Have an idea, project, or opportunity in mind? Let’s build something
+          meaningful together.
+        </p>
       </div>
 
-      <!-- Gradient Border Panel -->
-      <div class="gradient-border">
-        <div
-          class="rounded-[calc(1.5rem-1px)] bg-[#13181A]/95 backdrop-blur-xl overflow-hidden"
-        >
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-10 p-6 md:p-10">
-            <!-- Left: pitch + quick links -->
-            <div class="md:col-span-5 flex flex-col gap-8">
-              <div class="flex flex-col gap-4">
-                <span class="font-mono text-xs text-primary/80"
-                  >&gt;_ Let's build something great</span
-                >
-                <h3
-                  class="font-headline-md text-headline-md text-on-background leading-tight"
-                >
-                  Have an idea? Let's turn it into a real product.
-                </h3>
-                <p class="text-on-surface-variant text-body-md leading-relaxed">
-                  I'm currently open to freelance projects, collaboration, and
-                  interesting backend/API challenges. Usually responds within 24
-                  hours.
-                </p>
-              </div>
-
+      <div class="glass rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-xl">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10">
+          <!-- Left: pitch -->
+          <div class="md:col-span-5 flex flex-col justify-center gap-8 md:border-r md:border-[#333F43]/40 md:pr-8">
+            <div class="flex flex-col gap-4">
+              <span class="font-mono text-xs text-primary/80"
+                >&gt;_ Let's build something great</span
+              >
+              <h3
+                class="font-headline-md text-headline-md text-on-background leading-tight"
+              >
+                Have an idea? Let's turn it into a real product.
+              </h3>
+              <p class="text-on-surface-variant text-body-md leading-relaxed">
+                I'm currently open to freelance projects, collaboration, and
+                interesting backend/API challenges. Usually responds within 24
+                hours.
+              </p>
             </div>
+          </div>
 
-            <!-- Right: direct links -->
-            <div class="md:col-span-7 flex flex-col gap-3">
+          <!-- Right: direct links -->
+          <div class="md:col-span-7 flex flex-col gap-3">
               <div class="mb-2">
                 <span class="font-mono text-xs text-primary/80"
                   >&gt;_ Open channels</span
@@ -1424,11 +1627,11 @@
                 </h3>
               </div>
               <a
-                class="group flex items-center gap-4 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/45 p-4 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
+                class="group flex items-center gap-4 rounded-xl border border-[#333F43]/50 bg-white/[0.02] p-4 hover:border-primary/50 hover:bg-primary/[0.06] transition-all duration-300"
                 href={`mailto:${socialLinks.email}`}
               >
                 <div class="flex items-center justify-center w-11 h-11 rounded-lg bg-primary/10 text-primary shrink-0">
-                  <span class="material-symbols-outlined">mail</span>
+                  <img src="/images/stacks/gmail.svg" alt="" class="w-5 h-5" />
                 </div>
                 <div class="flex-1 min-w-0">
                   <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest text-xs mb-0.5">Email</p>
@@ -1437,20 +1640,7 @@
                 <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">arrow_outward</span>
               </a>
               <a
-                class="group flex items-center gap-4 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/45 p-4 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
-                href="tel:+6289684267761"
-              >
-                <div class="flex items-center justify-center w-11 h-11 rounded-lg bg-primary/10 text-primary shrink-0">
-                  <span class="material-symbols-outlined">call</span>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest text-xs mb-0.5">Phone</p>
-                  <p class="font-body-md text-on-background truncate">+62 896-8426-7761</p>
-                </div>
-                <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">arrow_outward</span>
-              </a>
-              <a
-                class="group flex items-center gap-4 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/45 p-4 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
+                class="group flex items-center gap-4 rounded-xl border border-[#333F43]/50 bg-white/[0.02] p-4 hover:border-primary/50 hover:bg-primary/[0.06] transition-all duration-300"
                 href={socialLinks.github}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -1471,7 +1661,7 @@
                 </span>
               </a>
               <a
-                class="group flex items-center gap-4 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/45 p-4 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
+                class="group flex items-center gap-4 rounded-xl border border-[#333F43]/50 bg-white/[0.02] p-4 hover:border-primary/50 hover:bg-primary/[0.06] transition-all duration-300"
                 href={socialLinks.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -1489,26 +1679,6 @@
                   arrow_outward
                 </span>
               </a>
-              <a
-                class="group flex items-center gap-4 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/45 p-4 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
-                href={socialLinks.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <div class="flex items-center justify-center w-11 h-11 rounded-lg bg-primary/10 text-primary shrink-0">
-                  <span class="material-symbols-outlined">photo_camera</span>
-                </div>
-                <div class="flex-1">
-                  <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest text-xs mb-0.5">
-                    Instagram
-                  </p>
-                  <p class="font-body-md text-on-background">@sultoniiii</p>
-                </div>
-                <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">
-                  arrow_outward
-                </span>
-              </a>
-            </div>
           </div>
         </div>
       </div>
