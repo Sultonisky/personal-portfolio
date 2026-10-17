@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { fade } from "svelte/transition";
   import Navbar from "$lib/components/Navbar.svelte";
   import Footer from "$lib/components/Footer.svelte";
   import Typewriter from "$lib/components/Typewriter.svelte";
@@ -398,28 +397,8 @@
   };
 
   const activePersonalProjects = personalProjects.filter(({ active = true }) => active);
-  const featuredProjects = personalProjects
-    .filter(({ name }) => name === "Slogy" || name === "Scroll")
-    .reverse();
   let personalProjectIndex = $state(0);
   let clientProjectIndex = $state(0);
-  let featuredProjectIndex = $state(0);
-  let featuredProject = $derived(featuredProjects[featuredProjectIndex]);
-  let featuredPointerStartX = 0;
-  let featuredPointerId = $state<number | null>(null);
-  let isFeaturedHovered = false;
-  let isFeaturedFocused = false;
-  let isFeaturedDragging = false;
-  let scheduleFeaturedProjectRotation = () => {};
-
-  function getFeaturedProjectImage(item: (typeof featuredProjects)[number]) {
-    return item.img ?? (item.name === "Slogy" ? "/images/projects/slogy-logo-r.png" : null);
-  }
-
-  function showFeaturedProject(index: number) {
-    featuredProjectIndex = (index + featuredProjects.length) % featuredProjects.length;
-    scheduleFeaturedProjectRotation();
-  }
 
   function showPersonalProject(index: number) {
     personalProjectIndex = (index + activePersonalProjects.length) % activePersonalProjects.length;
@@ -434,81 +413,10 @@
       mahakaryaDuration = getCurrentExperienceDuration("2026-07-01");
     }, 24 * 60 * 60 * 1000);
 
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let rotationTimeout: ReturnType<typeof setTimeout> | undefined;
-
-    scheduleFeaturedProjectRotation = () => {
-      window.clearTimeout(rotationTimeout);
-
-      if (
-        isFeaturedHovered ||
-        isFeaturedFocused ||
-        isFeaturedDragging ||
-        document.hidden ||
-        reducedMotion.matches
-      ) {
-        return;
-      }
-
-      rotationTimeout = window.setTimeout(() => {
-        showFeaturedProject(featuredProjectIndex + 1);
-      }, 4_000);
-    };
-
-    const handleVisibilityChange = () => scheduleFeaturedProjectRotation();
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    reducedMotion.addEventListener("change", handleVisibilityChange);
-    scheduleFeaturedProjectRotation();
-
     return () => {
       window.clearInterval(experienceDurationInterval);
-      window.clearTimeout(rotationTimeout);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      reducedMotion.removeEventListener("change", handleVisibilityChange);
     };
   });
-
-  function handleFeaturedFocusOut(e: FocusEvent) {
-    const carousel = e.currentTarget as HTMLElement;
-    if (e.relatedTarget instanceof Node && carousel.contains(e.relatedTarget)) return;
-
-    isFeaturedFocused = false;
-    scheduleFeaturedProjectRotation();
-  }
-
-  function startFeaturedProjectDrag(e: PointerEvent) {
-    if (
-      e.button !== 0 ||
-      (e.target instanceof Element && e.target.closest("a, button"))
-    ) {
-      return;
-    }
-
-    featuredPointerStartX = e.clientX;
-    featuredPointerId = e.pointerId;
-    isFeaturedDragging = true;
-    scheduleFeaturedProjectRotation();
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-  }
-
-  function endFeaturedProjectDrag(e: PointerEvent) {
-    if (featuredPointerId !== e.pointerId) return;
-
-    const distance = e.clientX - featuredPointerStartX;
-    featuredPointerId = null;
-    isFeaturedDragging = false;
-
-    if (Math.abs(distance) > 45) {
-      showFeaturedProject(featuredProjectIndex + (distance < 0 ? 1 : -1));
-    } else {
-      scheduleFeaturedProjectRotation();
-    }
-
-    const carousel = e.currentTarget as HTMLElement;
-    if (carousel.hasPointerCapture(e.pointerId)) {
-      carousel.releasePointerCapture(e.pointerId);
-    }
-  }
 
   function handleAnchorClick(e: MouseEvent, href: string) {
     e.preventDefault();
@@ -612,68 +520,43 @@
         <div class="flex flex-wrap items-center gap-3">
           <a
             class="bg-primary text-[#13181A] px-6 py-3.5 rounded-lg flex items-center gap-2 hover:brightness-110 hover:-translate-y-0.5 transition-all duration-300 font-label-caps text-label-caps font-semibold"
-            href="#projects"
-            onclick={(e) => handleAnchorClick(e, "#projects")}
+            href={`mailto:${socialLinks.email}`}
           >
-            <span class="material-symbols-outlined text-[20px]">work</span>
-            View Projects
+            <span class="material-symbols-outlined text-[20px]">mail</span>
+            Contact
           </a>
           <a
             class="bg-[#1D2427]/70 border border-[#333F43] text-on-background px-6 py-3.5 rounded-lg flex items-center gap-2 hover:border-primary/50 hover:text-primary transition-all duration-300 font-label-caps text-label-caps"
-            href="#contact"
-            onclick={(e) => handleAnchorClick(e, "#contact")}
-          >
-            <span class="material-symbols-outlined text-[20px]">mail</span>
-            Let's Talk
-          </a>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-3 mt-7">
-          <span class="font-mono text-xs text-on-surface-variant mr-1">Find me</span>
-          <a
-            class="flex items-center justify-center w-10 h-10 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/60 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
-            href={socialLinks.linkedin}
+            href="/images/RESUME_SULTONI.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="LinkedIn"
           >
-            <img alt="" class="w-5 h-auto" src="/images/stacks/linkedin.svg" />
-          </a>
-          <a
-            class="flex items-center justify-center w-10 h-10 rounded-xl border border-[#333F43]/50 bg-[#1D2427]/60 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
-            href={socialLinks.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-          >
-            <img alt="" class="w-5 h-auto" src="/images/stacks/github.svg" />
+            <span class="material-symbols-outlined text-[20px]">description</span>
+            Open CV
           </a>
         </div>
       </div>
 
-      <div
-        class="featured-project-carousel lg:col-span-5 group relative isolate overflow-hidden rounded-2xl border border-[#333F43]/70 p-5 sm:p-7 shadow-xl backdrop-blur-xl transition-all duration-300 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10"
-        role="region"
-        aria-roledescription="carousel"
-        aria-label={`Featured project: ${featuredProject.name}`}
-        class:is-dragging={featuredPointerId !== null}
-        onpointerenter={() => {
-          isFeaturedHovered = true;
-          scheduleFeaturedProjectRotation();
-        }}
-        onpointerleave={() => {
-          isFeaturedHovered = false;
-          scheduleFeaturedProjectRotation();
-        }}
-        onpointerdown={startFeaturedProjectDrag}
-        onpointerup={endFeaturedProjectDrag}
-        onpointercancel={endFeaturedProjectDrag}
-        onfocusin={() => {
-          isFeaturedFocused = true;
-          scheduleFeaturedProjectRotation();
-        }}
-        onfocusout={handleFeaturedFocusOut}
+      <figure
+        class="lg:col-span-5 lg:justify-self-end w-full max-w-[260px] sm:max-w-[300px] group relative isolate overflow-hidden rounded-2xl border border-primary/25 bg-[#13181A] p-1 shadow-xl shadow-primary/10 transition-all duration-300 hover:border-primary/60 hover:shadow-2xl hover:shadow-primary/20"
       >
+        <img
+          src="/images/hero-profile.jpg"
+          alt="Mohammad Sultoni"
+          class="aspect-[3/4] w-full rounded-xl object-cover object-top grayscale-[15%] contrast-[1.05] saturate-[0.8] transition-transform duration-500 group-hover:scale-[1.02]"
+          width="768"
+          height="1280"
+        />
+        <div
+          class="absolute inset-1 rounded-xl bg-gradient-to-t from-[#13181A]/80 via-transparent to-primary/10 mix-blend-multiply pointer-events-none"
+          aria-hidden="true"
+        ></div>
+        <div
+          class="absolute inset-1 rounded-xl ring-1 ring-inset ring-primary/20 pointer-events-none"
+          aria-hidden="true"
+        ></div>
+      </figure>
+      <!--
         <div class="project-card-grid opacity-20 group-hover:opacity-35" aria-hidden="true"></div>
         <div class="relative z-10 flex flex-col gap-3">
           <div class="featured-project-content">
@@ -836,6 +719,7 @@
           </div>
         </div>
       </div>
+      -->
     </div>
 
     <!-- Enhanced Background Glows -->
