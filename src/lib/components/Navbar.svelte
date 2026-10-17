@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { socialLinks } from '$lib/social-links';
+
 	let scrolled = $state(false);
 	let mobileMenuOpen = $state(false);
 	let activeSection = $state('home');
@@ -56,12 +58,14 @@
 		</div>
 		<div class="hidden md:flex items-center">
 			<a 
-				class="nav-link bg-primary/10 text-primary px-5 py-2.5 rounded-lg font-label-caps text-[18px] font-semibold hover:bg-primary/20 transition-all duration-300 text-center {activeSection === 'contact' ? 'active' : ''}"
-				data-section="contact"
-				href="#contact"
-				onclick={(e) => handleAnchorClick(e, '#contact')}
+				class="flex items-center justify-center w-10 h-10 rounded-lg border border-[#333F43]/50 bg-primary/10 hover:bg-primary/20 transition-all duration-300"
+				href={socialLinks.github}
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="GitHub"
+				title="GitHub"
 			>
-				Contact
+				<img src="/images/stacks/github.svg" alt="" class="w-5 h-auto" />
 			</a>
 		</div>
 		<button type="button" aria-label="Toggle navigation menu" class="md:hidden text-on-background p-2 rounded-lg hover:bg-surface-container-low transition-colors" onclick={() => mobileMenuOpen = !mobileMenuOpen}>
@@ -100,11 +104,14 @@
 			{/each}
 
 			<a 
-				class="mt-5 block w-full bg-primary text-[#13181A] px-5 py-3 rounded-lg font-semibold hover:bg-[#b8e600] transition-all duration-300 text-center"
-				href="#contact"
-				onclick={(e) => handleAnchorClick(e, '#contact')}
+				class="mt-5 flex items-center justify-center gap-2 w-full bg-primary text-[#13181A] px-5 py-3 rounded-lg font-semibold hover:bg-[#b8e600] transition-all duration-300 text-center"
+				href={socialLinks.github}
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="GitHub"
 			>
-				Contact
+				<img src="/images/stacks/github.svg" alt="" class="w-5 h-auto" />
+				GitHub
 			</a>
 		</div>
 	</div>
