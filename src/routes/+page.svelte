@@ -73,6 +73,25 @@
         "Full-Stack Development",
       ],
     },
+    {
+      role: "Technician",
+      company: "StickEarn",
+      logo: "/images/experience/stickearn.webp",
+      employmentType: "Internship",
+      period: "Jul 2022 - Sep 2022",
+      duration: "3 months",
+      location: "Jakarta, Indonesia · On-site",
+      summary:
+        "Supported on-site technical operations through equipment repair and workplace organization with 5S practices, while installing advertising stickers and LED units on ride-hailing vehicles including GoCar, Grab cars, motorcycles, and Gojek or Grab LED setups.",
+      skills: [
+        "Equipment Repair",
+        "5S",
+        "Sticker Installation",
+        "LED Installation",
+        "Vehicle Branding",
+        "Field Operations",
+      ],
+    },
   ];
 
   const productionStack: StackItem[] = [
