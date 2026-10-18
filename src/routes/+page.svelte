@@ -222,6 +222,7 @@
     {
       name: "Scroll",
       img: "/images/projects/logo-scroll.png",
+      preview: "/images/projects/previews/scroll-preview.jpg",
       link: "https://github.com/Sultonisky/Scroll",
       type: "Web Application",
       desc: "A self-hosted payroll platform for remote-first teams. It brings employee records, payroll operations, and recurring administrative workflows into a single private workspace.",
@@ -251,6 +252,7 @@
     {
       name: "Slogy",
       img: "/images/projects/slogy-logo-r.png",
+      preview: "/images/projects/previews/slogy-preview.jpg",
       link: "https://github.com/Sultonisky/Slogy",
       type: "Developer Package",
       desc: "A Laravel activity-logging package built for traceability and tamper awareness. It records application events, adds SHA-256 integrity checks, and provides tools for verifying log history.",
@@ -265,6 +267,7 @@
     {
       name: "Rasanesia",
       img: "/images/projects/rasanesia.png",
+      preview: "/images/projects/previews/rasanesia-preview.jpg",
       link: "https://github.com/Sultonisky/Rasanesia.git",
       type: "Web Application",
       desc: "A recipe-sharing platform for discovering, creating, and managing Indonesian recipes. It combines public recipe browsing with authentication, reviews and ratings, favorites, PDF export, and an admin dashboard for content management.",
@@ -280,6 +283,7 @@
     {
       name: "E-KTM Mobile",
       img: "/images/projects/logo_ketupat.png",
+      preview: "/images/projects/previews/ektm-preview.jpg",
       link: "https://github.com/Sultonisky/ektm-project-monorepo",
       type: "Mobile Application",
       desc: "A mobile tuition-payment platform for Bina Sarana Informatika University (UBSI). It guides students through payment selection and checkout while connecting transaction processing to Midtrans.",
@@ -305,6 +309,7 @@
     {
       name: "Bookingin",
       img: "/images/projects/logo-putih.png",
+      preview: "/images/projects/previews/bookingin-preview.jpg",
       link: "https://github.com/Sultonisky/Project-Laravel-Hotel-Bookingin",
       type: "Web Application",
       desc: "A hotel reservation platform with separate guest and admin experiences. It supports room booking, Midtrans payments, webhook-based confirmation, and email notifications from reservation to completion.",
@@ -323,6 +328,7 @@
     {
       name: "Job Portal | Anagata Executive",
       img: "/images/projects/anagata-white.png",
+      preview: "/images/projects/previews/anagata-preview.png",
       link: "https://anagataexecutive.co.id/",
       type: "Client Platform",
       desc: "A recruitment platform for Anagata Executive that helps connect candidates with relevant opportunities. The experience presents job listings and company information through a clear, content-focused interface.",
@@ -337,6 +343,7 @@
     {
       name: "Titip Kebaikan",
       img: "/images/projects/logo-tb.png",
+      preview: "/images/projects/previews/titip-kebaikan-preview.jpg",
       link: null,
       type: "Client Platform",
       desc: "A foundation-management platform for Yayasan At-Tarbiyah Pintu Air. It supports donation processing, program administration, and financial reporting to make charitable operations easier to manage and review.",
@@ -351,6 +358,7 @@
     {
       name: "The Days Coffee",
       img: "/images/projects/dedyass.png",
+      preview: "/images/projects/previews/days-coffee-preview.jpg",
       link: null,
       type: "Client Website",
       desc: "A simple and responsive coffee shop website. Users can place orders through a complete order form that automatically redirects to WhatsApp with their full order details for easy communication.",
@@ -538,23 +546,33 @@
       </div>
 
       <figure
-        class="lg:col-span-5 lg:justify-self-end w-full max-w-[260px] sm:max-w-[300px] group relative isolate overflow-hidden rounded-2xl border border-primary/25 bg-[#13181A] p-1 shadow-xl shadow-primary/10 transition-all duration-300 hover:border-primary/60 hover:shadow-2xl hover:shadow-primary/20"
+        class="hero-portrait lg:col-span-5 lg:justify-self-end w-full max-w-[280px] sm:max-w-[340px] group relative isolate"
       >
+        <!-- Ambient glows + geometry behind the cutout -->
+        <div class="hero-portrait-glow hero-portrait-glow-core" aria-hidden="true"></div>
+        <div class="hero-portrait-glow hero-portrait-glow-orbit" aria-hidden="true"></div>
+        <div class="hero-portrait-glow hero-portrait-glow-soft" aria-hidden="true"></div>
+        <div class="hero-portrait-ring" aria-hidden="true"></div>
+        <div class="hero-portrait-ring hero-portrait-ring-outer" aria-hidden="true"></div>
+        <div class="hero-portrait-grid" aria-hidden="true"></div>
+        <div class="hero-portrait-ticks" aria-hidden="true">
+          <span class="tick tick-tl-h"></span>
+          <span class="tick tick-tl-v"></span>
+          <span class="tick tick-tr-h"></span>
+          <span class="tick tick-tr-v"></span>
+          <span class="tick tick-bl-h"></span>
+          <span class="tick tick-bl-v"></span>
+          <span class="tick tick-br-h"></span>
+          <span class="tick tick-br-v"></span>
+        </div>
+
         <img
-          src="/images/hero-profile.jpg"
+          src="/images/profile-rm1.png"
           alt="Mohammad Sultoni"
-          class="aspect-[3/4] w-full rounded-xl object-cover object-top grayscale-[15%] contrast-[1.05] saturate-[0.8] transition-transform duration-500 group-hover:scale-[1.02]"
-          width="768"
-          height="1280"
+          class="hero-portrait-img relative z-10 w-full h-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)] transition-transform duration-500 group-hover:scale-[1.02]"
+          width="386"
+          height="646"
         />
-        <div
-          class="absolute inset-1 rounded-xl bg-gradient-to-t from-[#13181A]/80 via-transparent to-primary/10 mix-blend-multiply pointer-events-none"
-          aria-hidden="true"
-        ></div>
-        <div
-          class="absolute inset-1 rounded-xl ring-1 ring-inset ring-primary/20 pointer-events-none"
-          aria-hidden="true"
-        ></div>
       </figure>
       <!--
         <div class="project-card-grid opacity-20 group-hover:opacity-35" aria-hidden="true"></div>
@@ -1240,6 +1258,19 @@
           <div
             class="project-card group relative overflow-hidden rounded-2xl"
           >
+            {#if item.preview}
+              <div class="project-preview">
+                <img
+                  src={item.preview}
+                  alt={`${item.name} preview`}
+                  class="project-preview-img"
+                  loading="lazy"
+                  width="1280"
+                  height="720"
+                />
+                <div class="project-preview-fade" aria-hidden="true"></div>
+              </div>
+            {/if}
             <div class="p-6 flex flex-col gap-6 relative z-10 min-h-full">
               <div class="flex justify-between items-start gap-4">
                 <div class="flex items-center gap-4 min-w-0">
@@ -1418,6 +1449,19 @@
               <div
                 class="project-card group relative overflow-hidden rounded-2xl"
               >
+              {#if item.preview}
+                <div class="project-preview">
+                  <img
+                    src={item.preview}
+                    alt={`${item.name} preview`}
+                    class="project-preview-img"
+                    loading="lazy"
+                    width="1280"
+                    height="720"
+                  />
+                  <div class="project-preview-fade" aria-hidden="true"></div>
+                </div>
+              {/if}
               <div class="p-6 flex flex-col gap-6 relative z-10 min-h-full">
                 <div class="flex justify-between items-start gap-4">
                   <div class="flex items-center gap-4 min-w-0">
