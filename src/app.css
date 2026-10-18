@@ -732,6 +732,40 @@ html {
 	width: 100%;
 }
 
+.project-preview {
+	position: relative;
+	aspect-ratio: 16 / 9;
+	overflow: hidden;
+	border-bottom: 1px solid rgba(51, 63, 67, 0.55);
+	background: rgba(13, 17, 18, 0.85);
+}
+
+.project-preview-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: top center;
+	display: block;
+	transition: transform 0.55s ease;
+}
+
+.project-card:hover .project-preview-img {
+	transform: scale(1.04);
+}
+
+.project-preview-fade {
+	position: absolute;
+	inset: auto 0 0;
+	height: 42%;
+	pointer-events: none;
+	background: linear-gradient(
+		to top,
+		rgba(19, 24, 26, 0.92) 0%,
+		rgba(19, 24, 26, 0.35) 55%,
+		transparent 100%
+	);
+}
+
 .workflow-run {
 	background: rgba(19, 24, 26, 0.28);
 	border-color: rgba(51, 63, 67, 0.55);
@@ -977,6 +1011,256 @@ html {
 
 .typewriter-text {
 	white-space: pre-wrap;
+}
+
+/* Hero portrait — cutout over theme-matched atmosphere (no card) */
+.hero-portrait {
+	aspect-ratio: 3 / 4;
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+}
+
+.hero-portrait-glow {
+	position: absolute;
+	border-radius: 9999px;
+	pointer-events: none;
+	z-index: 0;
+}
+
+.hero-portrait-glow-core {
+	width: 78%;
+	height: 55%;
+	left: 60%;
+	top: 48%;
+	transform: translate(-50%, -50%);
+	background: radial-gradient(
+		circle,
+		rgba(255, 15, 175, 0.42) 0%,
+		rgba(255, 15, 175, 0.16) 42%,
+		transparent 72%
+	);
+	filter: blur(8px);
+	animation: hero-portrait-breathe 5.5s ease-in-out infinite;
+}
+
+.hero-portrait-glow-orbit {
+	width: 92%;
+	height: 70%;
+	left: 60%;
+	top: 48%;
+	transform: translate(-50%, -50%);
+	background: radial-gradient(
+		ellipse at center,
+		rgba(184, 230, 0, 0.12) 0%,
+		rgba(255, 15, 175, 0.1) 35%,
+		transparent 70%
+	);
+	filter: blur(28px);
+	animation: hero-portrait-breathe 7s ease-in-out infinite;
+	animation-delay: -2s;
+}
+
+.hero-portrait-glow-soft {
+	width: 120%;
+	height: 50%;
+	left: 60%;
+	bottom: -8%;
+	transform: translateX(-50%);
+	background: radial-gradient(
+		ellipse at center,
+		rgba(255, 15, 175, 0.18) 0%,
+		transparent 70%
+	);
+	filter: blur(36px);
+}
+
+.hero-portrait-ring,
+.hero-portrait-ring-outer {
+	position: absolute;
+	left: 60%;
+	top: 48%;
+	transform: translate(-50%, -50%);
+	border-radius: 9999px;
+	pointer-events: none;
+	z-index: 0;
+	border: 1px solid rgba(255, 15, 175, 0.28);
+	box-shadow:
+		0 0 24px rgba(255, 15, 175, 0.12),
+		inset 0 0 24px rgba(255, 15, 175, 0.06);
+}
+
+.hero-portrait-ring {
+	width: 72%;
+	aspect-ratio: 1;
+	animation: hero-portrait-ring-pulse 6s ease-in-out infinite;
+}
+
+.hero-portrait-ring-outer {
+	width: 92%;
+	aspect-ratio: 1;
+	border-color: rgba(255, 15, 175, 0.14);
+	border-style: dashed;
+	box-shadow: none;
+	animation: hero-portrait-ring-spin 28s linear infinite;
+}
+
+.hero-portrait-grid {
+	position: absolute;
+	inset: 8% 2% 8% 18%;
+	z-index: 0;
+	pointer-events: none;
+	border-radius: 40%;
+	opacity: 0.35;
+	background-image:
+		linear-gradient(to right, rgba(255, 15, 175, 0.14) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(255, 15, 175, 0.14) 1px, transparent 1px);
+	background-size: 22px 22px;
+	mask-image: radial-gradient(ellipse at 60% 48%, black 20%, transparent 72%);
+	-webkit-mask-image: radial-gradient(ellipse at 60% 48%, black 20%, transparent 72%);
+}
+
+.hero-portrait-ticks {
+	position: absolute;
+	/* Wider frame so brackets sit away from the silhouette */
+	inset: -4% -10% -2% 0%;
+	z-index: 1;
+	pointer-events: none;
+}
+
+.hero-portrait-ticks .tick {
+	position: absolute;
+}
+
+.hero-portrait-ticks .tick-tl-h {
+	top: 0;
+	left: 0;
+	width: 3rem;
+	height: 1.5px;
+	background: linear-gradient(to right, rgba(255, 15, 175, 0.7), transparent);
+}
+
+.hero-portrait-ticks .tick-tl-v {
+	top: 0;
+	left: 0;
+	width: 1.5px;
+	height: 3rem;
+	background: linear-gradient(to bottom, rgba(255, 15, 175, 0.7), transparent);
+}
+
+.hero-portrait-ticks .tick-tr-h {
+	top: 0;
+	right: 0;
+	width: 3rem;
+	height: 1.5px;
+	background: linear-gradient(to left, rgba(255, 15, 175, 0.7), transparent);
+}
+
+.hero-portrait-ticks .tick-tr-v {
+	top: 0;
+	right: 0;
+	width: 1.5px;
+	height: 3rem;
+	background: linear-gradient(to bottom, rgba(255, 15, 175, 0.7), transparent);
+}
+
+.hero-portrait-ticks .tick-bl-h {
+	bottom: 0;
+	left: 0;
+	width: 3rem;
+	height: 1.5px;
+	background: linear-gradient(to right, rgba(255, 15, 175, 0.7), transparent);
+}
+
+.hero-portrait-ticks .tick-bl-v {
+	bottom: 0;
+	left: 0;
+	width: 1.5px;
+	height: 3rem;
+	background: linear-gradient(to top, rgba(255, 15, 175, 0.7), transparent);
+}
+
+.hero-portrait-ticks .tick-br-h {
+	bottom: 0;
+	right: 0;
+	width: 3rem;
+	height: 1.5px;
+	background: linear-gradient(to left, rgba(255, 15, 175, 0.7), transparent);
+}
+
+.hero-portrait-ticks .tick-br-v {
+	bottom: 0;
+	right: 0;
+	width: 1.5px;
+	height: 3rem;
+	background: linear-gradient(to top, rgba(255, 15, 175, 0.7), transparent);
+}
+
+.hero-portrait-img {
+	max-height: 100%;
+	mask-image: linear-gradient(
+		to bottom,
+		black 0%,
+		black 78%,
+		rgba(0, 0, 0, 0.65) 90%,
+		transparent 100%
+	);
+	-webkit-mask-image: linear-gradient(
+		to bottom,
+		black 0%,
+		black 78%,
+		rgba(0, 0, 0, 0.65) 90%,
+		transparent 100%
+	);
+}
+
+.group:hover .hero-portrait-glow-core {
+	opacity: 1;
+	filter: blur(6px) brightness(1.15);
+}
+
+.group:hover .hero-portrait-ring {
+	border-color: rgba(255, 15, 175, 0.45);
+}
+
+@keyframes hero-portrait-breathe {
+	0%, 100% {
+		opacity: 0.85;
+		transform: translate(-50%, -50%) scale(1);
+	}
+	50% {
+		opacity: 1;
+		transform: translate(-50%, -50%) scale(1.06);
+	}
+}
+
+@keyframes hero-portrait-ring-pulse {
+	0%, 100% {
+		opacity: 0.55;
+		transform: translate(-50%, -50%) scale(1);
+	}
+	50% {
+		opacity: 0.9;
+		transform: translate(-50%, -50%) scale(1.03);
+	}
+}
+
+@keyframes hero-portrait-ring-spin {
+	from {
+		transform: translate(-50%, -50%) rotate(0deg);
+	}
+	to {
+		transform: translate(-50%, -50%) rotate(360deg);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.hero-portrait-glow-core,
+	.hero-portrait-glow-orbit,
+	.hero-portrait-ring,
+	.hero-portrait-ring-outer {
+		animation: none;
+	}
 }
 
 /* Hero Section Animations */
